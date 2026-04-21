@@ -41,7 +41,7 @@ public class VaultEncryptionService {
             byte[] hashBytes = mac.doFinal(password.getBytes(StandardCharsets.UTF_8));
             return Hex.toHexString(hashBytes);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException("Ошибка генерации отпечатка", e);
+            throw new RuntimeException("Generate fingerprint exception", e);
         }
     }
 

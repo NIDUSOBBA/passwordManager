@@ -49,7 +49,7 @@ public class DatabaseInitializer {
             statement.execute(createAccountTable);
 
         } catch (SQLException e) {
-            System.out.println("Проблема при создании таблицы: " + e.getMessage());
+            System.out.println("DatabaseInitializer exception : " + e.getMessage());
         }
     }
 }

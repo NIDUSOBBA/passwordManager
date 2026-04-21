@@ -3,40 +3,44 @@ package org.example.service;
 import org.example.dao.AccountDao;
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountUpdateDto;
-import org.example.utile.Const;
+import org.example.exception.ServiceExceptionHandler;
 
 import java.util.Scanner;
 
 import static org.example.utile.Const.*;
 
-public class AccountService {
+public class AccountService extends BaseService {
 
     private final AccountDao accountDao;
+    private final ServiceExceptionHandler serviceExceptionHandler;
 
-    public AccountService(AccountDao accountDao) {
+    public AccountService(AccountDao accountDao, ServiceExceptionHandler serviceExceptionHandler) {
+        super(serviceExceptionHandler);
         this.accountDao = accountDao;
+        this.serviceExceptionHandler = serviceExceptionHandler;
     }
 
-    public void search(String line,Scanner scanner){
-        if (line.length() == 2){
-            if (line.equals("ag")){
-                System.out.println(accountDao.getAll());
-            }else if (line.equals("au")){
-                System.out.println(UPDATE_ACCOUNT);
-                update(scanner.nextLine());
-            }else {
-                System.out.println(CREATE_ACCOUNT);
-                create(scanner.nextLine());
+    @Override
+    public void search(String line, Scanner scanner) {
+        if (line.length() == 2) {
+            switch (line) {
+                case "ag" -> handleGetAllAccounts();
+                case "au" -> handleUpdateAccount(scanner);
+                default -> handleCreateAccount(scanner);
             }
-        }else {
-
+        } else {
+            if (line.startsWith("ag")) {
+                getById(line);
+            } else {
+                deleteById(line);
+            }
         }
     }
 
-    public void create(String account){
+    @Override
+    public void create(String account) {
         String[] split = account.split(" ");
-        if (split.length != 4){
-            System.out.println(INVALID_FIELD + CREATE_ACCOUNT);
+        if (serviceExceptionHandler.validSplitResponse(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + CREATE_ACCOUNT)) {
             return;
         }
         try {
@@ -48,28 +52,53 @@ public class AccountService {
                             Integer.parseInt(split[3])
                     ));
 
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println(INVALID_FIELD + CREATE_ACCOUNT);
         }
     }
 
-    public void update(String account){
+    @Override
+    protected void performGetById(int id) {
+        System.out.println(accountDao.getById(id));
+    }
+
+    @Override
+    public void update(String account) {
         String[] split = account.split(" ");
-        if (split.length != 4){
-            System.out.println(INVALID_FIELD + UPDATE_ACCOUNT);
+        if (serviceExceptionHandler.validSplitResponse(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + UPDATE_ACCOUNT)) {
             return;
         }
         try {
-           accountDao.updateById(
-                   new AccountUpdateDto(
-                           Integer.parseInt(split[0]),
-                           split[1],
-                           split[2],
-                           Integer.parseInt(split[3])
-                   )
-           );
-        }catch (NumberFormatException e){
+            accountDao.updateById(
+                    new AccountUpdateDto(
+                            Integer.parseInt(split[0]),
+                            split[1],
+                            split[2],
+                            Integer.parseInt(split[3])
+                    )
+            );
+        } catch (NumberFormatException e) {
             System.out.println(INVALID_FIELD + UPDATE_ACCOUNT);
         }
     }
+
+    @Override
+    protected void performDeleteById(int id) {
+        accountDao.deleteById(id);
+    }
+
+    private void handleGetAllAccounts() {
+        System.out.println(accountDao.getAll());
+    }
+
+    private void handleUpdateAccount(Scanner scanner) {
+        System.out.println(UPDATE_ACCOUNT);
+        update(scanner.nextLine());
+    }
+
+    private void handleCreateAccount(Scanner scanner) {
+        System.out.println(CREATE_ACCOUNT);
+        create(scanner.nextLine());
+    }
+
 }

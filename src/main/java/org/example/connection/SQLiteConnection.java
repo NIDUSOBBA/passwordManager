@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+import static org.example.utile.Const.*;
+
 public class SQLiteConnection {
 
     public static Connection getConnection() {
-        String url = "jdbc:sqlite:password_vault.db";
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(BD_URL);
             try(Statement statement = connection.createStatement()) {
                 statement.execute("PRAGMA foreign_keys = ON;");
             }
