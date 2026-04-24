@@ -20,7 +20,7 @@ public class Const {
     public static final String NOT_EXISTENT_COMMAND = "Не существующая команда для возможных команд";
     public static final String INVALID_FIELD = "Не подходящий тип данных форма: \n";
 
-    public static final String BD_URL = "jdbc:sqlite:" + System.getenv("MANAGER_DB_URL");
+    public static final String BD_URL = "jdbc:sqlite:password_vault.db";
 
     public static final int VALID_ACCOUNT_SPLIT_LENGTH = 4;
     public static final int VALID_REQUEST_ID_SPLIT_LENGTH = 2;
