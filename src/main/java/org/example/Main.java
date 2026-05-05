@@ -3,18 +3,19 @@ package org.example;
 import org.example.connection.SQLiteConnection;
 import org.example.controller.ManagerVault;
 import org.example.dao.MetadataDao;
+import org.example.exception.MissingEnvironmentVariableException;
 import org.example.utile.DatabaseInitializer;
 
 import java.sql.Connection;
-
+import static org.example.utile.Const.*;
 
 public class Main {
     public static void main(String[] args){
         try(Connection connection = SQLiteConnection.getConnection()) {
             DatabaseInitializer.initializeDatabase(connection);
-            String masterKey = System.getenv("MASTER_KEY");
+            String masterKey = System.getenv(MASTER_KEY);
             if (masterKey == null) {
-                masterKey = System.getProperty("master.key");
+                throw new MissingEnvironmentVariableException(MASTER_KEY);
             }
             MetadataDao metadataDao = new MetadataDao(connection);
 

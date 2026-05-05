@@ -21,8 +21,10 @@ public class Const {
     public static final String INVALID_FIELD = "Не подходящий тип данных форма: \n";
 
     public static final String BD_URL = "jdbc:sqlite:" + System.getenv("MANAGER_DB_URL");
+    public static final String MASTER_KEY = "MASTER_KEY";
+    public static final String MANAGER_DB_URL = "MANAGER_DB_URL";
 
     public static final int VALID_ACCOUNT_SPLIT_LENGTH = 4;
     public static final int VALID_REQUEST_ID_SPLIT_LENGTH = 2;
-
+    public static final int INVALID_BD_URL_LENGTH = 11;
 }

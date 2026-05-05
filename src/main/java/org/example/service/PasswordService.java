@@ -2,7 +2,7 @@ package org.example.service;
 
 import org.example.dao.PasswordDao;
 import org.example.dto.PasswordDto;
-import org.example.exception.ServiceExceptionHandler;
+import org.example.utile.StringSplitValidator;
 
 import java.util.Scanner;
 
@@ -11,12 +11,9 @@ import static org.example.utile.Const.*;
 public class PasswordService extends BaseService {
 
     private final PasswordDao passwordDao;
-    private final ServiceExceptionHandler serviceExceptionHandler;
 
-    public PasswordService(PasswordDao passwordDao, ServiceExceptionHandler serviceExceptionHandler) {
-        super(serviceExceptionHandler);
+    public PasswordService(PasswordDao passwordDao) {
         this.passwordDao = passwordDao;
-        this.serviceExceptionHandler = serviceExceptionHandler;
     }
 
     @Override
@@ -54,7 +51,7 @@ public class PasswordService extends BaseService {
     @Override
     public void update(String account) {
         String[] split = account.split(" ");
-        if (serviceExceptionHandler.validSplitResponse(split, VALID_REQUEST_ID_SPLIT_LENGTH, INVALID_FIELD + UPDATE_PASSWORD)) {
+        if (StringSplitValidator.validateSplitResult(split, VALID_REQUEST_ID_SPLIT_LENGTH, INVALID_FIELD + UPDATE_PASSWORD)) {
             return;
         }
         try {

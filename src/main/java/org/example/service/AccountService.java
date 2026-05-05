@@ -3,7 +3,7 @@ package org.example.service;
 import org.example.dao.AccountDao;
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountUpdateDto;
-import org.example.exception.ServiceExceptionHandler;
+import org.example.utile.StringSplitValidator;
 
 import java.util.Scanner;
 
@@ -12,12 +12,9 @@ import static org.example.utile.Const.*;
 public class AccountService extends BaseService {
 
     private final AccountDao accountDao;
-    private final ServiceExceptionHandler serviceExceptionHandler;
 
-    public AccountService(AccountDao accountDao, ServiceExceptionHandler serviceExceptionHandler) {
-        super(serviceExceptionHandler);
+    public AccountService(AccountDao accountDao) {
         this.accountDao = accountDao;
-        this.serviceExceptionHandler = serviceExceptionHandler;
     }
 
     @Override
@@ -40,7 +37,7 @@ public class AccountService extends BaseService {
     @Override
     public void create(String account) {
         String[] split = account.split(" ");
-        if (serviceExceptionHandler.validSplitResponse(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + CREATE_ACCOUNT)) {
+        if (StringSplitValidator.validateSplitResult(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + CREATE_ACCOUNT)) {
             return;
         }
         try {
@@ -65,7 +62,7 @@ public class AccountService extends BaseService {
     @Override
     public void update(String account) {
         String[] split = account.split(" ");
-        if (serviceExceptionHandler.validSplitResponse(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + UPDATE_ACCOUNT)) {
+        if (StringSplitValidator.validateSplitResult(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + UPDATE_ACCOUNT)) {
             return;
         }
         try {

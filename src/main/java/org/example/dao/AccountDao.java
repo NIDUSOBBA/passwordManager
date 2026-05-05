@@ -35,14 +35,14 @@ public class AccountDao {
         }
     }
 
-    public AccountResponseDto getById(int id){
+    public AccountResponseDto getById(int id) {
         String selectQuery = """
                 SELECT id, service_name, email_id, username, password_id
                 FROM account 
                 WHERE id = ?;
                 """;
-        try(PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
-            preparedStatement.setInt(1,id);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return new AccountResponseDto(
                     resultSet.getInt("id"),
@@ -80,30 +80,30 @@ public class AccountDao {
         return resultList;
     }
 
-    public void updateById(AccountUpdateDto account){
+    public void updateById(AccountUpdateDto account) {
         String updateQuery = """
                 UPDATE account
                 SET service_name = ?, username = ?, password_id = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?;
                 """;
-        try(PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-            statement.setString(1,account.serviceName());
-            statement.setString(2,account.username());
-            statement.setInt(3,account.passwordId());
-            statement.setInt(4,account.id());
+        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+            statement.setString(1, account.serviceName());
+            statement.setString(2, account.username());
+            statement.setInt(3, account.passwordId());
+            statement.setInt(4, account.id());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Account updateById exception: " + e.getMessage());
         }
     }
 
-    public void deleteById(int id){
+    public void deleteById(int id) {
         String deleteQuery = """
                 DELETE FROM account 
                 WHERE id = ?;
                 """;
-        try(PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
-            preparedStatement.setInt(1,id);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+            preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
             System.out.println("Account deleteById exception: " + e.getMessage());

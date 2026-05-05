@@ -4,7 +4,6 @@ import org.example.dao.AccountDao;
 import org.example.dao.EmailDao;
 import org.example.dao.MetadataDao;
 import org.example.dao.PasswordDao;
-import org.example.exception.ServiceExceptionHandler;
 import org.example.service.AccountService;
 import org.example.service.EmailService;
 import org.example.service.PasswordService;
@@ -27,18 +26,18 @@ public class ManagerVault {
         this.emailService = emailService;
     }
 
-    public void start(){
-        try(Scanner scanner = new Scanner(System.in)) {
+    public void start() {
+        try (Scanner scanner = new Scanner(System.in)) {
             boolean flag = true;
             System.out.println(PLUG + "\n" + CONCLUSION + "\n" + COMMANDS);
-            while (flag){
+            while (flag) {
                 String line = scanner.nextLine();
-                if(line.equals(HELP)){
+                if (line.equals(HELP)) {
                     System.out.println(PLUG + "\n" + CONCLUSION + "\n" + COMMANDS);
-                }else if (line.equals(END)){
+                } else if (line.equals(END)) {
                     flag = false;
-                }else {
-                    distribution(line,scanner);
+                } else {
+                    distribution(line, scanner);
                 }
                 System.out.println(PLUG);
             }
@@ -47,26 +46,25 @@ public class ManagerVault {
 
     public static ManagerVault getManagerVault(String masterKey, MetadataDao metadataDao, Connection connection) throws Exception {
         VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKey, metadataDao);
-        ServiceExceptionHandler serviceExceptionHandler = new ServiceExceptionHandler();
 
-        PasswordDao passwordDao = new PasswordDao(connection,vaultEncryptionService);
+        PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
         EmailDao emailDao = new EmailDao(connection);
         AccountDao accountDao = new AccountDao(connection);
         return new ManagerVault(
-                new AccountService(accountDao, serviceExceptionHandler),
-                new PasswordService(passwordDao,serviceExceptionHandler),
-                new EmailService(emailDao,serviceExceptionHandler)
+                new AccountService(accountDao),
+                new PasswordService(passwordDao),
+                new EmailService(emailDao)
         );
     }
 
-    public void distribution(String line, Scanner scanner){
-        if (line.startsWith("a")){
-            accountService.search(line,scanner);
-        }else if(line.startsWith("p")){
-            passwordService.search(line,scanner);
-        }else if(line.startsWith("e")){
-            emailService.search(line,scanner);
-        }else {
+    public void distribution(String line, Scanner scanner) {
+        if (line.startsWith("a")) {
+            accountService.search(line, scanner);
+        } else if (line.startsWith("p")) {
+            passwordService.search(line, scanner);
+        } else if (line.startsWith("e")) {
+            emailService.search(line, scanner);
+        } else {
             System.out.println(NOT_EXISTENT_COMMAND);
         }
     }

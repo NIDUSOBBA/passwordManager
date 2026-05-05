@@ -1,23 +1,19 @@
 package org.example.service;
 
-import org.example.exception.ServiceExceptionHandler;
+import org.example.utile.StringSplitValidator;
 import static org.example.utile.Const.*;
 import java.util.Scanner;
 
 public abstract class BaseService {
-    protected final ServiceExceptionHandler serviceExceptionHandler;
-    
-    public BaseService(ServiceExceptionHandler serviceExceptionHandler) {
-        this.serviceExceptionHandler = serviceExceptionHandler;
-    }
-    
+
+    // Определяет какой следующий вызвать метод
     public abstract void search(String line, Scanner scanner);
     
     public abstract void create(String data);
     
     public void getById(String data) {
         String[] split = data.split(" ");
-        if (serviceExceptionHandler.validSplitResponse(split, 2, INVALID_FIELD + COMMANDS)) {
+        if (StringSplitValidator.validateSplitResult(split, 2, INVALID_FIELD + COMMANDS)) {
             return;
         }
         try {
@@ -32,7 +28,7 @@ public abstract class BaseService {
     
     public void deleteById(String data) {
         String[] split = data.split(" ");
-        if (serviceExceptionHandler.validSplitResponse(split, 2, INVALID_FIELD + COMMANDS)) {
+        if (StringSplitValidator.validateSplitResult(split, 2, INVALID_FIELD + COMMANDS)) {
             return;
         }
         try {

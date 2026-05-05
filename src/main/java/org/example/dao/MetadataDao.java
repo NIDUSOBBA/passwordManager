@@ -10,25 +10,25 @@ public class MetadataDao {
         this.connection = connection;
     }
 
-    public void create(byte[] bytes){
+    public void create(byte[] bytes) {
         String createQuery = """
                 INSERT INTO vault_metadata (id, salt) 
                 VALUES (1, ?);
                 """;
-        try(PreparedStatement preparedStatement = connection.prepareStatement(createQuery)) {
-            preparedStatement.setBytes(1,bytes);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(createQuery)) {
+            preparedStatement.setBytes(1, bytes);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Metadata create exception: " + e.getMessage());
         }
     }
 
-    public byte[] get(){
+    public byte[] get() {
         String selectQuery = """
                 SELECT salt 
                 FROM vault_metadata;
                 """;
-        try(Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectQuery);
             return resultSet.getBytes("salt");
         } catch (SQLException e) {

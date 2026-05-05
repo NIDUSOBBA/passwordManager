@@ -1,7 +1,6 @@
 package org.example.service;
 
 import org.example.dao.EmailDao;
-import org.example.exception.ServiceExceptionHandler;
 
 import java.util.Scanner;
 
@@ -10,12 +9,9 @@ import static org.example.utile.Const.*;
 public class EmailService extends BaseService {
 
     private final EmailDao emailDao;
-    private final ServiceExceptionHandler serviceExceptionHandler;
 
-    public EmailService(EmailDao emailDao, ServiceExceptionHandler serviceExceptionHandler) {
-        super(serviceExceptionHandler);
+    public EmailService(EmailDao emailDao) {
         this.emailDao = emailDao;
-        this.serviceExceptionHandler = serviceExceptionHandler;
     }
 
     @Override
