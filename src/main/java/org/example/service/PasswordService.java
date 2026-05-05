@@ -51,7 +51,7 @@ public class PasswordService extends BaseService {
 
     @Override
     public void update(String account) {
-        String[] split = account.split(" ");
+        String[] split = account.split("\\|");
         if (StringSplitValidator.validateSplitResult(split, VALID_REQUEST_ID_SPLIT_LENGTH, INVALID_FIELD + UPDATE_PASSWORD)) {
             return;
         }

@@ -12,8 +12,8 @@ public class Const {
     public static final String CREATE_PASSWORD = "Создание пароля [password(String)]";
     public static final String CREATE_EMAIL = "Создание почты [email(String)]";
 
-    public static final String UPDATE_ACCOUNT = "Обновление аккаунта [id(int) serviceName(String) username(String) password(int)]";
-    public static final String UPDATE_PASSWORD = "Обновление пароля [id(int) password(String)]";
+    public static final String UPDATE_ACCOUNT = "Обновление аккаунта [id(int)|serviceName(String)|username(String)|password(int)]";
+    public static final String UPDATE_PASSWORD = "Обновление пароля [id(int)|password(String)]";
 
     public static final String CONCLUSION = "При [end] завершение работы программы при [help] другие возможные команды";
     public static final String COMMANDS = "Назначения [a] аккаунты [p] пароли [e] почта \n[ac] - создание.[ag id(int)] - достать по id. \n[ag] - достать все. [au] - обновить. (у почты нету) \n[ad id(int)] - удалить по id.";
