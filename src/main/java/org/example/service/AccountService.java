@@ -38,7 +38,7 @@ public class AccountService extends BaseService {
 
     @Override
     public void create(String account) {
-        String[] split = account.split(" ");
+        String[] split = account.split("\\|");
         if (StringSplitValidator.validateSplitResult(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + CREATE_ACCOUNT)) {
             return;
         }

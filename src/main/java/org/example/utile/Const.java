@@ -7,7 +7,8 @@ public class Const {
     public static final String HELP = "help";
     public static final String END = "end";
 
-    public static final String CREATE_ACCOUNT = "Создание аккаунта [serviceName(String) email(id) username(String) password(int)]";
+    public static final String CREATE_ACCOUNT = "Создание аккаунта [serviceName(String)|email(id)|username(String)|password(int)]";
+
     public static final String CREATE_PASSWORD = "Создание пароля [password(String)]";
     public static final String CREATE_EMAIL = "Создание почты [email(String)]";
 
