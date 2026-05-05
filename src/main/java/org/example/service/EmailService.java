@@ -1,7 +1,9 @@
 package org.example.service;
 
 import org.example.dao.EmailDao;
+import org.example.dto.EmailDto;
 
+import java.util.List;
 import java.util.Scanner;
 
 import static org.example.utile.Const.*;
@@ -53,7 +55,10 @@ public class EmailService extends BaseService {
     }
 
     private void handleGetAllEmail() {
-        System.out.println(emailDao.getAll());
+        List<EmailDto> all = emailDao.getAll();
+        for (EmailDto emailDto : all) {
+            System.out.println(emailDto);
+        }
     }
 
 

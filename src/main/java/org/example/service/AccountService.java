@@ -2,9 +2,11 @@ package org.example.service;
 
 import org.example.dao.AccountDao;
 import org.example.dto.AccountCreateDto;
+import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountUpdateDto;
 import org.example.utile.StringSplitValidator;
 
+import java.util.List;
 import java.util.Scanner;
 
 import static org.example.utile.Const.*;
@@ -85,7 +87,10 @@ public class AccountService extends BaseService {
     }
 
     private void handleGetAllAccounts() {
-        System.out.println(accountDao.getAll());
+        List<AccountResponseDto> all = accountDao.getAll();
+        for (AccountResponseDto account : all){
+            System.out.println(account);
+        }
     }
 
     private void handleUpdateAccount(Scanner scanner) {

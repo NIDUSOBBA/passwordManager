@@ -4,6 +4,7 @@ import org.example.dao.PasswordDao;
 import org.example.dto.PasswordDto;
 import org.example.utile.StringSplitValidator;
 
+import java.util.List;
 import java.util.Scanner;
 
 import static org.example.utile.Const.*;
@@ -67,7 +68,10 @@ public class PasswordService extends BaseService {
     }
 
     private void handleGetAllPassword() {
-        System.out.println(passwordDao.getAll());
+        List<PasswordDto> all = passwordDao.getAll();
+        for (PasswordDto passwordDto: all){
+            System.out.println(passwordDto);
+        }
     }
 
     private void handleUpdatePassword(Scanner scanner) {
