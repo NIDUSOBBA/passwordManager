@@ -8,6 +8,7 @@ import org.example.service.AccountService;
 import org.example.service.EmailService;
 import org.example.service.PasswordService;
 import org.example.service.VaultEncryptionService;
+import org.example.utile.ResponseComposerAccount;
 
 import java.sql.Connection;
 import java.util.Scanner;
@@ -50,8 +51,9 @@ public class ManagerVault {
         PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
         EmailDao emailDao = new EmailDao(connection);
         AccountDao accountDao = new AccountDao(connection);
+        ResponseComposerAccount responseComposerAccount = new ResponseComposerAccount(emailDao,passwordDao);
         return new ManagerVault(
-                new AccountService(accountDao),
+                new AccountService(accountDao,responseComposerAccount),
                 new PasswordService(passwordDao),
                 new EmailService(emailDao)
         );

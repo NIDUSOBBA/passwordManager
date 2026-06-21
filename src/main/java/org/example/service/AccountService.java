@@ -4,6 +4,7 @@ import org.example.dao.AccountDao;
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountUpdateDto;
+import org.example.utile.ResponseComposerAccount;
 import org.example.utile.StringSplitValidator;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import static org.example.utile.Const.*;
 public class AccountService extends BaseService {
 
     private final AccountDao accountDao;
+    private final ResponseComposerAccount responseComposerAccount;
 
-    public AccountService(AccountDao accountDao) {
+    public AccountService(AccountDao accountDao, ResponseComposerAccount responseComposerAccount) {
         this.accountDao = accountDao;
+        this.responseComposerAccount = responseComposerAccount;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class AccountService extends BaseService {
 
     @Override
     protected void performGetById(int id) {
-        System.out.println(accountDao.getById(id));
+        System.out.println(responseComposerAccount.compose(accountDao.getById(id)));
     }
 
     @Override
