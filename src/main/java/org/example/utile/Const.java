@@ -21,11 +21,13 @@ public class Const {
     public static final String NOT_EXISTENT_COMMAND = "Не существующая команда для возможных команд";
     public static final String INVALID_FIELD = "Не подходящий тип данных форма: \n";
 
-    public static final String BD_URL = "jdbc:sqlite:" + System.getenv("MANAGER_DB_URL");
-    public static final String MASTER_KEY = "MASTER_KEY";
-    public static final String MANAGER_DB_URL = "MANAGER_DB_URL";
+    public static final String BD_URL = "jdbc:sqlite:" + PathDeterminant.locationDisk() + "password_vault.db";
+    public static final String CREATE_MASTER_KEY_MESSAGE = "Пожалуйста напишите свой мастер ключ";
+    public static final String MASTER_KEY_WARNING = "Вы уверены что хотите сделать это своим мастер ключом: ";
+    public static final String MASTER_KEY_REJECTION = "Если не хотите его использовать напишите \"нет\" если хотите то пишите \"да\"";
+
+
 
     public static final int VALID_ACCOUNT_SPLIT_LENGTH = 4;
     public static final int VALID_REQUEST_ID_SPLIT_LENGTH = 2;
-    public static final int INVALID_BD_URL_LENGTH = 11;
 }

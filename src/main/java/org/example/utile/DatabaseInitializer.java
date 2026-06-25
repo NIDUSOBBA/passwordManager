@@ -9,15 +9,15 @@ public class DatabaseInitializer {
     public static void initializeDatabase(Connection connection){
         String createMetadata = """
                 CREATE TABLE IF NOT EXISTS vault_metadata (
-                    id INTEGER PRIMARY KEY CHECK (id = 1), 
-                    salt BLOB NOT NULL,
+                    id INTEGER PRIMARY KEY CHECK (id = 1),
+                    salt TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
                 """;
         String createPasswordVaultTable = """
                 CREATE TABLE IF NOT EXISTS password (
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                encrypted_password BLOB NOT NULL,
+                                encrypted_password TEXT NOT NULL,
                                 password_fingerprint TEXT UNIQUE,
                                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                             );
