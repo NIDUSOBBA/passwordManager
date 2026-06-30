@@ -21,9 +21,4 @@ public class KeyringMasterKeyUtil {
         return keyring.getPassword(KEYRING_SERVICE_NAME, KEYRING_ACCOUNT_NAME);
     }
 
-    public void delete() throws PasswordAccessException {
-        keyring.deletePassword(KEYRING_SERVICE_NAME, KEYRING_ACCOUNT_NAME);
-    }
-
-
 }
