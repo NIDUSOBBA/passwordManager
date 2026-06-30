@@ -4,10 +4,7 @@ import org.example.dao.AccountDao;
 import org.example.dao.EmailDao;
 import org.example.dao.MetadataDao;
 import org.example.dao.PasswordDao;
-import org.example.service.AccountService;
-import org.example.service.EmailService;
-import org.example.service.PasswordService;
-import org.example.service.VaultEncryptionService;
+import org.example.service.*;
 import org.example.utile.ResponseComposerAccount;
 
 import java.sql.Connection;
@@ -15,13 +12,13 @@ import java.util.Scanner;
 
 import static org.example.utile.Const.*;
 
-public class ManagerVault {
+public class Launcher {
 
     private final AccountService accountService;
     private final PasswordService passwordService;
     private final EmailService emailService;
 
-    public ManagerVault(AccountService accountService, PasswordService passwordService, EmailService emailService) {
+    public Launcher(AccountService accountService, PasswordService passwordService, EmailService emailService) {
         this.accountService = accountService;
         this.passwordService = passwordService;
         this.emailService = emailService;
@@ -45,14 +42,13 @@ public class ManagerVault {
         }
     }
 
-    public static ManagerVault getManagerVault(String masterKey, MetadataDao metadataDao, Connection connection) throws Exception {
-        VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKey, metadataDao);
-
+    public static Launcher getManagerVault(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
+        VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKeyService.get(), metadataDao);
         PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
         EmailDao emailDao = new EmailDao(connection);
         AccountDao accountDao = new AccountDao(connection);
         ResponseComposerAccount responseComposerAccount = new ResponseComposerAccount(emailDao,passwordDao);
-        return new ManagerVault(
+        return new Launcher(
                 new AccountService(accountDao,responseComposerAccount),
                 new PasswordService(passwordDao),
                 new EmailService(emailDao)

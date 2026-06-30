@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class DatabaseInitializer {
 
     public static void initializeDatabase(Connection connection){
-        String createMetadata = """
+        String createMetadataTable = """
                 CREATE TABLE IF NOT EXISTS vault_metadata (
                     id INTEGER PRIMARY KEY CHECK (id = 1),
                     salt TEXT NOT NULL,
@@ -43,7 +43,7 @@ public class DatabaseInitializer {
                             );
                 """;
         try(Statement statement = connection.createStatement()) {
-            statement.execute(createMetadata);
+            statement.execute(createMetadataTable);
             statement.execute(createPasswordVaultTable);
             statement.execute(createEmailTable);
             statement.execute(createAccountTable);

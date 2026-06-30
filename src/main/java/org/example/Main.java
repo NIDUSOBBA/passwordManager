@@ -1,31 +1,35 @@
 package org.example;
 
+import com.github.javakeyring.Keyring;
 import org.example.connection.SQLiteConnection;
-import org.example.controller.ManagerVault;
+import org.example.controller.Launcher;
 import org.example.dao.MetadataDao;
+import org.example.service.MasterKeyService;
 import org.example.utile.DatabaseInitializer;
-import org.example.utile.MasterKeyIn;
+import org.example.utile.KeyringMasterKeyUtil;
 
 import java.sql.Connection;
 
 public class Main {
     public static void main(String[] args) {
-
         try(Connection connection = SQLiteConnection.getConnection()) {
             DatabaseInitializer.initializeDatabase(connection);
             MetadataDao metadataDao = new MetadataDao(connection);
-            MasterKeyIn masterKeyIn = new MasterKeyIn();
-            String key = masterKeyIn.loadMasterKey();
-            if (key.isBlank()){
-                masterKeyIn.masterKeyInitialization();
+            MasterKeyService masterKeyService = new MasterKeyService(
+                    new KeyringMasterKeyUtil(Keyring.create()));
+            String masterKey = masterKeyService.get();
+
+            if (masterKey ==  null){
+                do {
+                    masterKeyService.masterKeyInit();
+                    masterKey = masterKeyService.get();
+                }while (masterKey == null);
             }
-            String masterKey = masterKeyIn.loadMasterKey();
 
-
-            ManagerVault managerVault = ManagerVault.getManagerVault(masterKey, metadataDao, connection);
-            managerVault.start();
+            Launcher launcher = Launcher.getManagerVault(masterKeyService, metadataDao, connection);
+            launcher.start();
         } catch (Exception e) {
-            System.out.println("Manager initialize exception: " + e.getMessage());
+            System.out.println("Launcher initialize exception: " + e.getMessage());
         }
 
     }
