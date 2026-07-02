@@ -25,7 +25,9 @@ public class ResponseComposerAccount {
                 accountResponseDto.serviceName(),
                 emailDto.email(),
                 accountResponseDto.username(),
-                passwordDto.encryptedPassword()
+                passwordDto.encryptedPassword(),
+                accountResponseDto.created(),
+                accountResponseDto.updated()
         );
     }
 }

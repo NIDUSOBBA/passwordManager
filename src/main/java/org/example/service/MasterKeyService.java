@@ -23,7 +23,7 @@ public class MasterKeyService {
                 try {
                     keyUtil.create(key);
                 } catch (Exception e) {
-                    System.out.println("Ошибка сохранения мастер-ключа: " + e.getMessage());
+                    System.err.println("Exception create master key: " + e.getMessage());
                 }
             }
         }
@@ -33,7 +33,7 @@ public class MasterKeyService {
         try {
             return keyUtil.get();
         } catch (Exception e) {
-            System.out.println("Ошибка получения мастер-ключа: " + e.getMessage());
+            System.err.println("Exception get master key: " + e.getMessage());
             return null;
         }
     }

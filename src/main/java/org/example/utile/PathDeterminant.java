@@ -17,12 +17,11 @@ public class PathDeterminant {
                     .toURI());
 
             // Если это JAR-файл, берем его родительскую папку.
-            // Если запускаем из IDE (папка классов), берем текущую директорию.
             String appPath = jarDir.isDirectory() ? jarDir.getPath() : jarDir.getParent();
 
             return appPath + File.separator;
         } catch (URISyntaxException e) {
-            System.out.println("Произошла ошибка при определении места на диске: " + e.getMessage());
+            System.err.println("Path Determinant exception: " + e.getMessage());
         }
         return "";
     }

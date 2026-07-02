@@ -29,7 +29,7 @@ public class Main {
             Launcher launcher = Launcher.getManagerVault(masterKeyService, metadataDao, connection);
             launcher.start();
         } catch (Exception e) {
-            System.out.println("Launcher initialize exception: " + e.getMessage());
+            System.err.println("Launcher initialize exception: " + e.getMessage());
         }
 
     }

@@ -16,7 +16,7 @@ public class SQLiteConnection {
                 statement.execute("PRAGMA foreign_keys = ON;");
             }
         } catch (Exception e) {
-            System.out.println("Connection exception: " + e.getMessage());
+            System.err.println("Connection exception: " + e.getMessage());
         }
         return connection;
     }

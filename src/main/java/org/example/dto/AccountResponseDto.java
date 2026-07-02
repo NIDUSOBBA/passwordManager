@@ -1,11 +1,15 @@
 package org.example.dto;
 
+import java.sql.Timestamp;
+
 public record AccountResponseDto(
         int id,
         String serviceName,
         int email,
         String username,
-        int encryptedPassword
+        int encryptedPassword,
+        Timestamp created,
+        Timestamp updated
 ) {
     @Override
     public String toString() {
@@ -13,6 +17,8 @@ public record AccountResponseDto(
                 ", serviceName=" + serviceName +
                 ", email=" + email +
                 ", username=" + username +
-                ", encryptedPassword=" + encryptedPassword;
+                ", encryptedPassword=" + encryptedPassword +
+                ", created=" + created +
+                ", updated=" + updated;
     }
 }
