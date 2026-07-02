@@ -26,7 +26,7 @@ public class PasswordDao {
             statement.setString(2, vaultEncryptionService.generateFingerprint(password));
             statement.executeUpdate();
         } catch (Exception e) {
-            System.out.println("Password create exception: " + e.getMessage());
+            System.err.println("Password create exception: " + e.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class PasswordDao {
                     ));
 
         } catch (Exception e) {
-            System.out.println("Password getById exception: " + e.getMessage());
+            System.err.println("Password getById exception: " + e.getMessage());
         }
         return null;
     }
@@ -65,7 +65,7 @@ public class PasswordDao {
                         )));
             }
         } catch (Exception e) {
-            System.out.println("Password getAll exception: " + e.getMessage());
+            System.err.println("Password getAll exception: " + e.getMessage());
         }
         return resultList;
     }
@@ -82,7 +82,7 @@ public class PasswordDao {
             statement.setInt(3, passwordDto.id());
             statement.executeUpdate();
         } catch (Exception e) {
-            System.out.println("Password updateById exception: " + e.getMessage());
+            System.err.println("Password updateById exception: " + e.getMessage());
         }
     }
 
@@ -95,7 +95,28 @@ public class PasswordDao {
             statement.setInt(1, id);
             statement.execute();
         } catch (SQLException e) {
-            System.out.println("Password deleteById exception: " + e.getMessage());
+            System.err.println("Password deleteById exception: " + e.getMessage());
         }
+    }
+
+    public PasswordDto getLast(){
+        String getLast = """
+                SELECT *
+                FROM password
+                WHERE id = (
+                 SELECT MAX(id)
+                 FROM password
+                 );
+                """;
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getLast);
+            return new PasswordDto(
+                    resultSet.getInt("id"),
+                    vaultEncryptionService.decryptFromStorage(resultSet.getBytes("encrypted_password")
+                    ));
+        } catch (Exception e) {
+            System.err.println("Password getLast exception: " + e.getMessage());
+        }
+        return null;
     }
 }

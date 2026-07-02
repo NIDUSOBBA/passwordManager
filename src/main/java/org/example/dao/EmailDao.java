@@ -22,7 +22,7 @@ public class EmailDao {
             statement.setString(1, email);
             statement.executeUpdate();
         } catch (Exception e) {
-            System.out.println("Email create exception: " + e.getMessage());
+            System.err.println("Email create exception: " + e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class EmailDao {
                     resultSet.getString("email")
             );
         } catch (SQLException e) {
-            System.out.println("Email getById exception: " + e.getMessage());
+            System.err.println("Email getById exception: " + e.getMessage());
         }
         return null;
     }
@@ -60,7 +60,7 @@ public class EmailDao {
                 ));
             }
         } catch (SQLException e) {
-            System.out.println("Email getAll exception: " + e.getMessage());
+            System.err.println("Email getAll exception: " + e.getMessage());
         }
         return resultList;
     }
@@ -75,7 +75,7 @@ public class EmailDao {
             statement.setInt(1, id);
             statement.executeQuery();
         } catch (SQLException e) {
-            System.out.println("Email deleteById exception: " + e.getMessage());
+            System.err.println("Email deleteById exception: " + e.getMessage());
         }
     }
 }

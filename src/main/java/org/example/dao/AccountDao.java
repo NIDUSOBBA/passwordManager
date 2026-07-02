@@ -1,6 +1,5 @@
 package org.example.dao;
 
-
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountUpdateDto;
@@ -31,13 +30,13 @@ public class AccountDao {
 
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            System.out.println("Account create exception: " + e.getMessage());
+            System.err.println("Account create exception: " + e.getMessage());
         }
     }
 
     public AccountResponseDto getById(int id) {
         String selectQuery = """
-                SELECT id, service_name, email_id, username, password_id
+                SELECT id, service_name, email_id, username, password_id, created_at, updated_at
                 FROM account 
                 WHERE id = ?;
                 """;
@@ -49,17 +48,19 @@ public class AccountDao {
                     resultSet.getString("service_name"),
                     resultSet.getInt("email_id"),
                     resultSet.getString("username"),
-                    resultSet.getInt("password_id")
+                    resultSet.getInt("password_id"),
+                    resultSet.getTimestamp("created_at"),
+                    resultSet.getTimestamp("updated_at")
             );
         } catch (SQLException e) {
-            System.out.println("Account getById exception: " + e.getMessage());
+            System.err.println("Account getById exception: " + e.getMessage());
         }
         return null;
     }
 
     public List<AccountResponseDto> getAll() {
         String selectQuery = """
-                SELECT id, service_name, email_id, username, password_id
+                SELECT id, service_name, email_id, username, password_id, created_at, updated_at
                 FROM account;
                 """;
         List<AccountResponseDto> resultList = new ArrayList<>();
@@ -71,11 +72,13 @@ public class AccountDao {
                         resultSet.getString("service_name"),
                         resultSet.getInt("email_id"),
                         resultSet.getString("username"),
-                        resultSet.getInt("password_id")
+                        resultSet.getInt("password_id"),
+                        resultSet.getTimestamp("created_at"),
+                        resultSet.getTimestamp("updated_at")
                 ));
             }
         } catch (Exception e) {
-            System.out.println("Account getAll exception: " + e.getMessage());
+            System.err.println("Account getAll exception: " + e.getMessage());
         }
         return resultList;
     }
@@ -93,7 +96,7 @@ public class AccountDao {
             statement.setInt(4, account.id());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Account updateById exception: " + e.getMessage());
+            System.err.println("Account updateById exception: " + e.getMessage());
         }
     }
 
@@ -106,7 +109,7 @@ public class AccountDao {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("Account deleteById exception: " + e.getMessage());
+            System.err.println("Account deleteById exception: " + e.getMessage());
         }
     }
 }

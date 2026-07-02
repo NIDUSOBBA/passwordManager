@@ -19,7 +19,7 @@ public class MetadataDao {
             preparedStatement.setBytes(1, bytes);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Metadata create exception: " + e.getMessage());
+            System.err.println("Metadata create exception: " + e.getMessage());
         }
     }
 
@@ -32,7 +32,7 @@ public class MetadataDao {
             ResultSet resultSet = statement.executeQuery(selectQuery);
             return resultSet.getBytes("salt");
         } catch (SQLException e) {
-            System.out.println("Metadata get exception: " + e.getMessage());
+            System.err.println("Metadata get exception: " + e.getMessage());
         }
         return null;
     }
