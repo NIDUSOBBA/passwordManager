@@ -18,7 +18,7 @@ public class AppLogger {
 
     private final Style infoStyle, warnStyle, errorStyle;
 
-    private AppLogger(JTextPane logPane, String logFilePath) {
+    private AppLogger(JTextPane logPane) {
         this.logPane = logPane;
         this.doc = logPane.getStyledDocument();
 
@@ -34,9 +34,9 @@ public class AppLogger {
         StyleConstants.setBold(errorStyle, true);
     }
 
-    public static synchronized void init(JTextPane logPane, String logFilePath) {
+    public static synchronized void init(JTextPane logPane) {
         if (instance == null) {
-            instance = new AppLogger(logPane, logFilePath);
+            instance = new AppLogger(logPane);
         }
     }
 
@@ -54,7 +54,8 @@ public class AppLogger {
     }
 
     public static void error(String msg, Throwable e) {
-        log("ERROR", msg, instance.errorStyle);
+        String errorMsg = msg + e.getMessage();
+        log("ERROR", errorMsg, instance.errorStyle);
     }
 
     private static void log(String level, String msg, Style style) {

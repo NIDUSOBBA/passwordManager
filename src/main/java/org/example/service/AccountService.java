@@ -3,16 +3,14 @@ package org.example.service;
 import org.example.dao.AccountDao;
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountResponseDto;
+import org.example.dto.AccountResponseDtoCompose;
 import org.example.dto.AccountUpdateDto;
 import org.example.utile.ResponseComposerAccount;
-import org.example.utile.StringSplitValidator;
 
 import java.util.List;
-import java.util.Scanner;
 
-import static org.example.utile.Const.*;
 
-public class AccountService extends BaseService {
+public class AccountService   {
 
     private final AccountDao accountDao;
     private final ResponseComposerAccount responseComposerAccount;
@@ -22,88 +20,33 @@ public class AccountService extends BaseService {
         this.responseComposerAccount = responseComposerAccount;
     }
 
-    @Override
-    public void search(String line, Scanner scanner) {
-        if (line.length() == 2) {
-            switch (line) {
-                case "ag" -> handleGetAllAccounts();
-                case "au" -> handleUpdateAccount(scanner);
-                default -> handleCreateAccount(scanner);
-            }
-        } else {
-            if (line.startsWith("ag")) {
-                getById(line);
-            } else {
-                deleteById(line);
-            }
-        }
+    public void create(AccountCreateDto account) {
+        accountDao.crete(account);
     }
 
-    @Override
-    public void create(String account) {
-        String[] split = account.split("\\|");
-        if (StringSplitValidator.validateSplitResult(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + CREATE_ACCOUNT)) {
-            return;
-        }
-        try {
-            accountDao.crete(
-                    new AccountCreateDto(
-                            split[0],
-                            Integer.parseInt(split[1]),
-                            split[2],
-                            Integer.parseInt(split[3])
-                    ));
-
-        } catch (NumberFormatException e) {
-            System.out.println(INVALID_FIELD + CREATE_ACCOUNT);
-        }
+    public AccountResponseDto getById(int id){
+        return accountDao.getById(id);
+    }
+    public List<AccountResponseDto> getAll(){
+        return accountDao.getAll();
     }
 
-    @Override
-    protected void performGetById(int id) {
-        System.out.println(responseComposerAccount.compose(accountDao.getById(id)));
+    public AccountResponseDtoCompose getByIdCompose(int id){
+        return responseComposerAccount.compose(
+                accountDao.getById(id)
+        );
+    }
+    public List<AccountResponseDtoCompose> getAllCompose(){
+        return responseComposerAccount.compose(accountDao.getAll());
     }
 
-    @Override
-    public void update(String account) {
-        String[] split = account.split("\\|");
-        if (StringSplitValidator.validateSplitResult(split, VALID_ACCOUNT_SPLIT_LENGTH, INVALID_FIELD + UPDATE_ACCOUNT)) {
-            return;
-        }
-        try {
-            accountDao.updateById(
-                    new AccountUpdateDto(
-                            Integer.parseInt(split[0]),
-                            split[1],
-                            split[2],
-                            Integer.parseInt(split[3])
-                    )
-            );
-        } catch (NumberFormatException e) {
-            System.out.println(INVALID_FIELD + UPDATE_ACCOUNT);
-        }
+    public void update(AccountUpdateDto account) {
+        accountDao.update(account);
+
     }
 
-    @Override
-    protected void performDeleteById(int id) {
+    public void deleteById(int id){
         accountDao.deleteById(id);
-    }
-
-    private void handleGetAllAccounts() {
-        List<AccountResponseDto> all = accountDao.getAll();
-        for (AccountResponseDto account : all){
-            System.out.println(account);
-        }
-    }
-
-    private void handleUpdateAccount(Scanner scanner) {
-        System.out.println(UPDATE_ACCOUNT);
-        update(scanner.nextLine());
-    }
-
-    private void handleCreateAccount(Scanner scanner) {
-        System.out.println(CREATE_ACCOUNT);
-        create(scanner.nextLine());
     }
 
 }

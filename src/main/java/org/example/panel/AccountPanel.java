@@ -1,16 +1,26 @@
 package org.example.panel;
 
+import org.example.dto.AccountResponseDtoCompose;
+import org.example.service.AccountService;
+import org.example.utile.DefaultModel;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
-public class AccountPanel extends BasePage{
+public class AccountPanel implements BasePage,BaseMethod{
     private DefaultTableModel accountModel;
+    private AccountService accountService;
+
+    public AccountPanel(AccountService accountService){
+        this.accountService = accountService;
+    }
 
     @Override
     public JPanel createPanel() {
         String[] cols = {"id", "Сервис", "Почта", "Имя", "Пароль", "Время создания", "Время обновления"};
-        accountModel = defModel(cols);
+        accountModel = DefaultModel.creteModel(cols);
         JTable table = new JTable(accountModel);
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
@@ -33,4 +43,31 @@ public class AccountPanel extends BasePage{
         btns.add(bthDelete);
         jPanel.add(btns, BorderLayout.SOUTH);
     }
+
+    @Override
+    public void loadTable() {
+        List<AccountResponseDtoCompose> allCompose = accountService.getAllCompose();
+        for (AccountResponseDtoCompose a: allCompose){
+            accountModel.addRow(new Object[]{
+                    a.id(),
+                    a.serviceName(),
+                    a.email(),
+                    a.username(),
+                    a.encryptedPassword(),
+                    a.created(),
+                    a.updated()
+            });
+        }
+    }
+
+    @Override
+    public void add() {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
+
 }

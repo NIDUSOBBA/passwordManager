@@ -3,6 +3,7 @@ package org.example.dao;
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountUpdateDto;
+import org.example.utile.AppLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class AccountDao {
 
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            System.err.println("Account create exception: " + e.getMessage());
+            AppLogger.error("Account create exception: ", e);
         }
     }
 
@@ -83,7 +84,7 @@ public class AccountDao {
         return resultList;
     }
 
-    public void updateById(AccountUpdateDto account) {
+    public void update(AccountUpdateDto account) {
         String updateQuery = """
                 UPDATE account
                 SET service_name = ?, username = ?, password_id = ?, updated_at = CURRENT_TIMESTAMP
