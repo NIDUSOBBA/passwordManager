@@ -18,7 +18,7 @@ public class MasterKeyService {
             System.out.println("Вы хотите сделать этот ключ мастер ключом?\nДа\nНет");
             String result = scanner.nextLine();
             if (result.equals("Нет")){
-                System.out.println("Введите ключ:");
+                System.out.println("Ключ не выбран");
             }else{
                 try {
                     keyUtil.create(key);

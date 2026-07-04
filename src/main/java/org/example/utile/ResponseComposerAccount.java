@@ -7,6 +7,8 @@ import org.example.dto.AccountResponseDtoCompose;
 import org.example.dto.EmailDto;
 import org.example.dto.PasswordDto;
 
+import java.util.List;
+
 public class ResponseComposerAccount {
 
     private final EmailDao emailDao;
@@ -29,5 +31,9 @@ public class ResponseComposerAccount {
                 accountResponseDto.created(),
                 accountResponseDto.updated()
         );
+    }
+
+    public List<AccountResponseDtoCompose> compose(List<AccountResponseDto> accountResponseDto){
+        return accountResponseDto.stream().map(this::compose).toList();
     }
 }

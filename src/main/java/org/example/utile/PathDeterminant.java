@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 public class PathDeterminant {
 
     // Определяем местоположение на диске
-    public static String locationDisk(){
+    public static String locationDisk() {
         // Определяем местоположение текущего класса на диске
         try {
             File jarDir = new File(Main.class.getProtectionDomain()
@@ -21,7 +21,7 @@ public class PathDeterminant {
 
             return appPath + File.separator;
         } catch (URISyntaxException e) {
-            System.err.println("Path Determinant exception: " + e.getMessage());
+            AppLogger.error("Path Determinant exception: ", e);
         }
         return "";
     }

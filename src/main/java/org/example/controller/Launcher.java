@@ -1,6 +1,8 @@
 package org.example.controller;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.github.javakeyring.Keyring;
+import org.example.connection.SQLiteConnection;
 import org.example.dao.AccountDao;
 import org.example.dao.EmailDao;
 import org.example.dao.MetadataDao;
@@ -10,63 +12,52 @@ import org.example.panel.EmailPanel;
 import org.example.panel.LogPanel;
 import org.example.panel.PasswordPanel;
 import org.example.service.*;
+import org.example.utile.DatabaseInitializer;
+import org.example.utile.KeyringMasterKeyUtil;
 import org.example.utile.ResponseComposerAccount;
 
 import javax.swing.*;
 import java.sql.Connection;
-import java.util.Scanner;
-
-import static org.example.utile.Const.*;
 
 public class Launcher {
 
-    private final AccountService accountService;
-    private final PasswordService passwordService;
-    private final EmailService emailService;
+    public static void start()  {
+        try(Connection connection = SQLiteConnection.getConnection()) {
+            DatabaseInitializer.initializeDatabase(connection);
+            MetadataDao metadataDao = new MetadataDao(connection);
+            MasterKeyService masterKeyService = new MasterKeyService(
+                    new KeyringMasterKeyUtil(Keyring.create()));
+            String masterKey = masterKeyService.get();
 
-    public Launcher(AccountService accountService, PasswordService passwordService, EmailService emailService) {
-        this.accountService = accountService;
-        this.passwordService = passwordService;
-        this.emailService = emailService;
-    }
-
-    public void start() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            boolean flag = true;
-            System.out.println(PLUG + "\n" + CONCLUSION + "\n" + COMMANDS);
-            while (flag) {
-                String line = scanner.nextLine();
-                if (line.equals(HELP)) {
-                    System.out.println(PLUG + "\n" + CONCLUSION + "\n" + COMMANDS);
-                } else if (line.equals(END)) {
-                    flag = false;
-                } else {
-                    distribution(line, scanner);
-                }
-                System.out.println(PLUG);
+            if (masterKey == null) {
+                do {
+                    masterKeyService.masterKeyInit();
+                    masterKey = masterKeyService.get();
+                } while (masterKey == null);
             }
+
+            Launcher.managerVaultIn(masterKeyService, metadataDao, connection);
+        } catch (Exception e) {
+            System.err.println("Launcher initialize exception: " + e.getMessage());
         }
     }
 
-    public static Launcher getManagerVault(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
+    public static void managerVaultIn(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
         VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKeyService.get(), metadataDao);
         PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
         EmailDao emailDao = new EmailDao(connection);
         AccountDao accountDao = new AccountDao(connection);
-        ResponseComposerAccount responseComposerAccount = new ResponseComposerAccount(emailDao,passwordDao);
-        windowIn(passwordDao);
-        return new Launcher(
-                new AccountService(accountDao,responseComposerAccount),
+        ResponseComposerAccount responseComposerAccount = new ResponseComposerAccount(emailDao, passwordDao);
+        windowIn(new AccountService(accountDao, responseComposerAccount),
                 new PasswordService(passwordDao),
-                new EmailService(emailDao)
-        );
+                new EmailService(emailDao));
     }
 
-    public static void windowIn(PasswordDao passwordDao){
+    public static void windowIn(AccountService accountService, PasswordService passwordService, EmailService emailService) {
         LogPanel logPanel = new LogPanel();
-        AccountPanel accountPanel = new AccountPanel();
-        PasswordPanel passwordPanel = new PasswordPanel();
-        EmailPanel emailPanel = new EmailPanel();
+        AccountPanel accountPanel = new AccountPanel(accountService);
+        PasswordPanel passwordPanel = new PasswordPanel(passwordService);
+        EmailPanel emailPanel = new EmailPanel(emailService);
         SwingUtilities.invokeLater(() -> {
             try {
                 FlatDarkLaf.setup();
@@ -79,21 +70,10 @@ public class Launcher {
             } catch (Exception e) {
                 System.err.println("Exception windows initialization: " + e.getMessage());
             }
-            WindowManager app = new WindowManager(logPanel,accountPanel,passwordPanel,emailPanel);
+            WindowManager app = new WindowManager(logPanel, accountPanel, passwordPanel, emailPanel);
             app.start();
             app.setVisible(true);
         });
     }
 
-    public void distribution(String line, Scanner scanner) {
-        if (line.startsWith("a")) {
-            accountService.search(line, scanner);
-        } else if (line.startsWith("p")) {
-            passwordService.search(line, scanner);
-        } else if (line.startsWith("e")) {
-            emailService.search(line, scanner);
-        } else {
-            System.out.println(NOT_EXISTENT_COMMAND);
-        }
-    }
 }

@@ -23,7 +23,7 @@ public class WindowManager extends JFrame {
         this.emailPanel = emailPanel;
     }
 
-    public void start(){
+    public void start() {
         windowIn();
     }
 
@@ -36,7 +36,7 @@ public class WindowManager extends JFrame {
         AppLogger.info("Приложение запущено успешно");
     }
 
-    public void assemblingWindow(){
+    public void assemblingWindow() {
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabsInit(), logPanel.createPanel());
         splitPane.setResizeWeight(0.8); // 80% вкладкам, 20% логам
         splitPane.setDividerLocation(500);
@@ -46,11 +46,11 @@ public class WindowManager extends JFrame {
         add(splitPane, BorderLayout.CENTER);
     }
 
-    public JTabbedPane tabsInit(){
+    public JTabbedPane tabsInit() {
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("🔑 Пароли", passwordPanel.createPanel());
         tabs.addTab("🔐 Аккаунты", accountPanel.createPanel());
-        tabs.addTab("📧 Почта",emailPanel.createPanel());
+        tabs.addTab("📧 Почта", emailPanel.createPanel());
         return tabs;
     }
 

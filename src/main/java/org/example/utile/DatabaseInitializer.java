@@ -49,7 +49,7 @@ public class DatabaseInitializer {
             statement.execute(createAccountTable);
 
         } catch (SQLException e) {
-            System.out.println("DatabaseInitializer exception : " + e.getMessage());
+            AppLogger.error("DatabaseInitializer exception : ",e);
         }
     }
 }

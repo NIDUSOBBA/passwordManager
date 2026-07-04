@@ -5,7 +5,7 @@ import org.example.utile.AppLogger;
 import javax.swing.*;
 import java.awt.*;
 
-public class LogPanel extends BasePage {
+public class LogPanel implements BasePage{
     private JTextPane logPane;
 
     @Override
@@ -30,7 +30,7 @@ public class LogPanel extends BasePage {
             AppLogger.error("Необработанное исключение в потоке " + t.getName(), e);
         });
 
-        AppLogger.init(logPane, "app.log");
+        AppLogger.init(logPane);
         return logPanel;
     }
 

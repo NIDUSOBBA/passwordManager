@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.dto.EmailDto;
+import org.example.utile.AppLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class EmailDao {
             statement.setString(1, email);
             statement.executeUpdate();
         } catch (Exception e) {
-            System.err.println("Email create exception: " + e.getMessage());
+            AppLogger.error("Email create exception: ", e);
         }
     }
 
@@ -40,7 +41,7 @@ public class EmailDao {
                     resultSet.getString("email")
             );
         } catch (SQLException e) {
-            System.err.println("Email getById exception: " + e.getMessage());
+            AppLogger.error("Email getById exception: ", e);
         }
         return null;
     }
@@ -60,7 +61,7 @@ public class EmailDao {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Email getAll exception: " + e.getMessage());
+            AppLogger.error("Email getAll exception: ", e);
         }
         return resultList;
     }
@@ -75,7 +76,7 @@ public class EmailDao {
             statement.setInt(1, id);
             statement.executeQuery();
         } catch (SQLException e) {
-            System.err.println("Email deleteById exception: " + e.getMessage());
+            AppLogger.error("Email deleteById exception: ", e);
         }
     }
 }

@@ -1,5 +1,7 @@
 package org.example.dao;
 
+import org.example.utile.AppLogger;
+
 import java.sql.*;
 
 public class MetadataDao {
@@ -19,7 +21,7 @@ public class MetadataDao {
             preparedStatement.setBytes(1, bytes);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Metadata create exception: " + e.getMessage());
+            AppLogger.error("Metadata create exception: ", e);
         }
     }
 
@@ -32,7 +34,7 @@ public class MetadataDao {
             ResultSet resultSet = statement.executeQuery(selectQuery);
             return resultSet.getBytes("salt");
         } catch (SQLException e) {
-            System.err.println("Metadata get exception: " + e.getMessage());
+            AppLogger.error("Metadata get exception: ", e);
         }
         return null;
     }

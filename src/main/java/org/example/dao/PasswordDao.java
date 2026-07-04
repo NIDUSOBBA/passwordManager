@@ -2,6 +2,7 @@ package org.example.dao;
 
 import org.example.dto.PasswordDto;
 import org.example.service.VaultEncryptionService;
+import org.example.utile.AppLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class PasswordDao {
             statement.setString(2, vaultEncryptionService.generateFingerprint(password));
             statement.executeUpdate();
         } catch (Exception e) {
-            System.err.println("Password create exception: " + e.getMessage());
+            AppLogger.error("Password create exception: ", e);
         }
     }
 
@@ -45,7 +46,7 @@ public class PasswordDao {
                     ));
 
         } catch (Exception e) {
-            System.err.println("Password getById exception: " + e.getMessage());
+            AppLogger.error("Password getById exception: ", e);
         }
         return null;
     }
@@ -65,7 +66,7 @@ public class PasswordDao {
                         )));
             }
         } catch (Exception e) {
-            System.err.println("Password getAll exception: " + e.getMessage());
+            AppLogger.error("Password getAll exception: ", e);
         }
         return resultList;
     }
@@ -82,7 +83,7 @@ public class PasswordDao {
             statement.setInt(3, passwordDto.id());
             statement.executeUpdate();
         } catch (Exception e) {
-            System.err.println("Password updateById exception: " + e.getMessage());
+            AppLogger.error("Password updateById exception: ", e);
         }
     }
 
@@ -95,7 +96,7 @@ public class PasswordDao {
             statement.setInt(1, id);
             statement.execute();
         } catch (SQLException e) {
-            System.err.println("Password deleteById exception: " + e.getMessage());
+            AppLogger.error("Password deleteById exception: ", e);
         }
     }
 
@@ -115,7 +116,7 @@ public class PasswordDao {
                     vaultEncryptionService.decryptFromStorage(resultSet.getBytes("encrypted_password")
                     ));
         } catch (Exception e) {
-            System.err.println("Password getLast exception: " + e.getMessage());
+            AppLogger.error("Password getLast exception: ", e);
         }
         return null;
     }

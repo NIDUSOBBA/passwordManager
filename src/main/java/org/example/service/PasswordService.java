@@ -2,14 +2,10 @@ package org.example.service;
 
 import org.example.dao.PasswordDao;
 import org.example.dto.PasswordDto;
-import org.example.utile.StringSplitValidator;
 
 import java.util.List;
-import java.util.Scanner;
 
-import static org.example.utile.Const.*;
-
-public class PasswordService extends BaseService {
+public class PasswordService   {
 
     private final PasswordDao passwordDao;
 
@@ -17,70 +13,19 @@ public class PasswordService extends BaseService {
         this.passwordDao = passwordDao;
     }
 
-    @Override
-    public void search(String line, Scanner scanner) {
-        if (line.length() == 2) {
-            switch (line) {
-                case "pg" -> handleGetAllPassword();
-                case "pu" -> handleUpdatePassword(scanner);
-                default -> handleCreatePassword(scanner);
-            }
-        } else {
-            if (line.startsWith("pg")) {
-                getById(line);
-            } else {
-                deleteById(line);
-            }
-        }
-    }
-
-    @Override
     public void create(String password) {
         passwordDao.crete(password);
     }
 
-    @Override
-    protected void performGetById(int id) {
-        System.out.println(passwordDao.getById(id));
+    public PasswordDto getById(int id){
+        return passwordDao.getById(id);
+    }
+    public List<PasswordDto> getAll(){
+        return passwordDao.getAll();
     }
 
-    @Override
-    protected void performDeleteById(int id) {
+    public void deleteById(int id){
         passwordDao.deleteById(id);
     }
 
-    @Override
-    public void update(String account) {
-        String[] split = account.split("\\|");
-        if (StringSplitValidator.validateSplitResult(split, VALID_REQUEST_ID_SPLIT_LENGTH, INVALID_FIELD + UPDATE_PASSWORD)) {
-            return;
-        }
-        try {
-            passwordDao.updateById(
-                    new PasswordDto(
-                            Integer.parseInt(split[0]),
-                            split[1]
-                    )
-            );
-        } catch (NumberFormatException e) {
-            System.out.println(INVALID_FIELD + UPDATE_PASSWORD);
-        }
-    }
-
-    private void handleGetAllPassword() {
-        List<PasswordDto> all = passwordDao.getAll();
-        for (PasswordDto passwordDto: all){
-            System.out.println(passwordDto);
-        }
-    }
-
-    private void handleUpdatePassword(Scanner scanner) {
-        System.out.println(UPDATE_PASSWORD);
-        update(scanner.nextLine());
-    }
-
-    private void handleCreatePassword(Scanner scanner) {
-        System.out.println(CREATE_PASSWORD);
-        create(scanner.nextLine());
-    }
 }
