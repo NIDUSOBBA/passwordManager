@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EmailPanel implements BasePage, BaseMethod{
     private DefaultTableModel emailModel;
-    private EmailService emailService;
+    private final EmailService emailService;
 
     public EmailPanel(EmailService emailService) {
         this.emailService = emailService;
@@ -26,6 +26,7 @@ public class EmailPanel implements BasePage, BaseMethod{
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        loadTable();
         return panel;
     }
 

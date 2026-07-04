@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PasswordPanel implements BasePage,BaseMethod{
     private DefaultTableModel passwordModel;
-    private PasswordService passwordService;
+    private final PasswordService passwordService;
 
     public PasswordPanel(PasswordService passwordService){
         this.passwordService = passwordService;
@@ -26,6 +26,7 @@ public class PasswordPanel implements BasePage,BaseMethod{
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        loadTable();
         return panel;
     }
 

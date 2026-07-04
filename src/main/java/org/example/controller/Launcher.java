@@ -1,8 +1,6 @@
 package org.example.controller;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.github.javakeyring.Keyring;
-import org.example.connection.SQLiteConnection;
 import org.example.dao.AccountDao;
 import org.example.dao.EmailDao;
 import org.example.dao.MetadataDao;
@@ -12,8 +10,6 @@ import org.example.panel.EmailPanel;
 import org.example.panel.LogPanel;
 import org.example.panel.PasswordPanel;
 import org.example.service.*;
-import org.example.utile.DatabaseInitializer;
-import org.example.utile.KeyringMasterKeyUtil;
 import org.example.utile.ResponseComposerAccount;
 
 import javax.swing.*;
@@ -21,25 +17,10 @@ import java.sql.Connection;
 
 public class Launcher {
 
-    public static void start()  {
-        try(Connection connection = SQLiteConnection.getConnection()) {
-            DatabaseInitializer.initializeDatabase(connection);
-            MetadataDao metadataDao = new MetadataDao(connection);
-            MasterKeyService masterKeyService = new MasterKeyService(
-                    new KeyringMasterKeyUtil(Keyring.create()));
-            String masterKey = masterKeyService.get();
+    public static boolean windowClosed = true;
 
-            if (masterKey == null) {
-                do {
-                    masterKeyService.masterKeyInit();
-                    masterKey = masterKeyService.get();
-                } while (masterKey == null);
-            }
-
-            Launcher.managerVaultIn(masterKeyService, metadataDao, connection);
-        } catch (Exception e) {
-            System.err.println("Launcher initialize exception: " + e.getMessage());
-        }
+    public static void start(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
+        Launcher.managerVaultIn(masterKeyService, metadataDao, connection);
     }
 
     public static void managerVaultIn(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
@@ -74,6 +55,7 @@ public class Launcher {
             app.start();
             app.setVisible(true);
         });
+
     }
 
 }

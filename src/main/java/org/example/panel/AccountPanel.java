@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AccountPanel implements BasePage,BaseMethod{
     private DefaultTableModel accountModel;
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public AccountPanel(AccountService accountService){
         this.accountService = accountService;
@@ -25,6 +25,7 @@ public class AccountPanel implements BasePage,BaseMethod{
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        loadTable();
         return panel;
     }
 

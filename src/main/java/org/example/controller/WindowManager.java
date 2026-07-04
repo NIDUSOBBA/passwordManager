@@ -8,6 +8,8 @@ import org.example.utile.AppLogger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class WindowManager extends JFrame {
 
@@ -31,6 +33,12 @@ public class WindowManager extends JFrame {
         setTitle("Менеджер Аккаунтов");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                Launcher.windowClosed = false;
+            }
+        });
         setLocationRelativeTo(null);
         assemblingWindow();
         AppLogger.info("Приложение запущено успешно");
