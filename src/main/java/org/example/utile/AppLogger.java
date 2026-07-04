@@ -12,15 +12,18 @@ import java.time.format.DateTimeFormatter;
 public class AppLogger {
     private static AppLogger instance;
 
-    private final JTextPane logPane;
-    private final StyledDocument doc;
+    private static JTextPane logPane;
+    private static StyledDocument doc;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final Style infoStyle, warnStyle, errorStyle;
+    private static Style infoStyle;
+    private static Style warnStyle;
+    private static Style errorStyle;
+    private static boolean initialized = false;
 
     private AppLogger(JTextPane logPane) {
-        this.logPane = logPane;
-        this.doc = logPane.getStyledDocument();
+        AppLogger.logPane = logPane;
+        doc = logPane.getStyledDocument();
 
         // Настраиваем стили
         infoStyle = doc.addStyle("INFO", null);
@@ -38,24 +41,25 @@ public class AppLogger {
         if (instance == null) {
             instance = new AppLogger(logPane);
         }
+        initialized = true;
     }
 
     public static AppLogger getInstance() {
-        if (instance == null) throw new IllegalStateException("Logger не инициализирован!");
+        if (initialized) throw new IllegalStateException("Logger не инициализирован!");
         return instance;
     }
 
     public static void info(String msg) {
-        log("INFO", msg, instance.infoStyle);
+        log("INFO", msg, infoStyle);
     }
 
     public static void warn(String msg) {
-        log("WARN", msg, instance.warnStyle);
+        log("WARN", msg, warnStyle);
     }
 
     public static void error(String msg, Throwable e) {
         String errorMsg = msg + e.getMessage();
-        log("ERROR", errorMsg, instance.errorStyle);
+        log("ERROR", errorMsg, errorStyle);
     }
 
     private static void log(String level, String msg, Style style) {
@@ -63,21 +67,29 @@ public class AppLogger {
         String timestamp = LocalDateTime.now().format(instance.fmt);
         String line = String.format("[%s] [%s] %s%n", timestamp, level, msg);
 
-        if ("ERROR".equals(level)){
+        if ("ERROR".equals(level)) {
             System.err.print(line);
-        } else{
+        } else {
             System.out.print(line);
         }
-        SwingUtilities.invokeLater(() -> {
-            try {
-                instance.doc.insertString(instance.doc.getLength(), line, style);
-                instance.logPane.setCaretPosition(instance.doc.getLength());
-                if (instance.doc.getLength() > 500_000) {
-                    instance.doc.remove(0, 100_000);
+        if (initialized) {
+            Style actualStyle = switch (level) {
+                case "WARN" -> warnStyle;
+                case "ERROR" -> errorStyle;
+                default -> infoStyle;
+            };
+
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    doc.insertString(doc.getLength(), line, actualStyle);
+                    logPane.setCaretPosition(doc.getLength());
+                    if (doc.getLength() > 500_000) {
+                        doc.remove(0, 100_000);
+                    }
+                } catch (BadLocationException e) {
+                    System.err.println("Exception log: " + e.getMessage());
                 }
-            } catch (BadLocationException e) {
-                System.err.println("Exception log: " + e.getMessage());
-            }
-        });
+            });
+        }
     }
 }
