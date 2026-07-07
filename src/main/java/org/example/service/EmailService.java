@@ -21,6 +21,10 @@ public class EmailService {
         return emailDao.getById(id);
     }
 
+    public EmailDto getLast(){
+        return emailDao.getLast();
+    }
+
     public List<EmailDto> getAll(){
         return emailDao.getAll();
     }

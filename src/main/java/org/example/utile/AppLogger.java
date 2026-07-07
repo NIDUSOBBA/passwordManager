@@ -50,19 +50,19 @@ public class AppLogger {
     }
 
     public static void info(String msg) {
-        log("INFO", msg, infoStyle);
+        log("INFO", msg);
     }
 
     public static void warn(String msg) {
-        log("WARN", msg, warnStyle);
+        log("WARN", msg);
     }
 
     public static void error(String msg, Throwable e) {
         String errorMsg = msg + e.getMessage();
-        log("ERROR", errorMsg, errorStyle);
+        log("ERROR", errorMsg);
     }
 
-    private static void log(String level, String msg, Style style) {
+    private static void log(String level, String msg) {
         if (instance == null) return;
         String timestamp = LocalDateTime.now().format(instance.fmt);
         String line = String.format("[%s] [%s] %s%n", timestamp, level, msg);

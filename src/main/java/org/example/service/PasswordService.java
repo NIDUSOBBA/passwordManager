@@ -20,6 +20,10 @@ public class PasswordService   {
     public PasswordDto getById(int id){
         return passwordDao.getById(id);
     }
+
+    public PasswordDto getLast(){
+        return passwordDao.getLast();
+    }
     public List<PasswordDto> getAll(){
         return passwordDao.getAll();
     }

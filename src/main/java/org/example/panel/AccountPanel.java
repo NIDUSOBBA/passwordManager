@@ -1,5 +1,6 @@
 package org.example.panel;
 
+import org.example.controller.WindowManager;
 import org.example.dto.AccountResponseDtoCompose;
 import org.example.service.AccountService;
 import org.example.utile.DefaultModel;
@@ -11,6 +12,8 @@ import java.util.List;
 
 public class AccountPanel implements BasePage,BaseMethod{
     private DefaultTableModel accountModel;
+    private JTable table;
+    private WindowManager windowManager;
     private final AccountService accountService;
 
     public AccountPanel(AccountService accountService){
@@ -21,7 +24,7 @@ public class AccountPanel implements BasePage,BaseMethod{
     public JPanel createPanel() {
         String[] cols = {"id", "Сервис", "Почта", "Имя", "Пароль", "Время создания", "Время обновления"};
         accountModel = DefaultModel.creteModel(cols);
-        JTable table = new JTable(accountModel);
+        table = new JTable(accountModel);
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -32,7 +35,7 @@ public class AccountPanel implements BasePage,BaseMethod{
     @Override
     public void buttonIn(JPanel jPanel) {
         JButton btnAdd = new JButton("Добавить");
-//        btnAdd.addActionListener(e -> addAccount());
+        btnAdd.addActionListener(e -> add());
         JButton btnUpdate =  new JButton("Обновить");
 //        btnUpdate.addActionListener(e -> updateAccount(table, model,tableId));
         JButton bthDelete = new JButton("Удалить");
@@ -63,12 +66,18 @@ public class AccountPanel implements BasePage,BaseMethod{
 
     @Override
     public void add() {
+        JTextField service = new JTextField();
 
     }
 
     @Override
     public void delete() {
 
+    }
+
+    @Override
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
 
 }
