@@ -5,6 +5,7 @@ import org.example.service.VaultEncryptionService;
 import org.example.utile.AppLogger;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +20,16 @@ public class PasswordDao {
 
     public void crete(String password) {
         String insertQuery = """
-                INSERT INTO password (encrypted_password, password_fingerprint)
-                VALUES (?,?);
+                INSERT INTO password (encrypted_password, password_fingerprint, created_at)
+                VALUES (?,?,?);
                 """;
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setBytes(1, vaultEncryptionService.encryptForStorage(password));
             statement.setString(2, vaultEncryptionService.generateFingerprint(password));
+            statement.setObject(3, LocalDateTime.now());
             statement.executeUpdate();
         } catch (Exception e) {
-            AppLogger.error("Password create exception: ", e);
+            throw new RuntimeException("Dublicat password");
         }
     }
 

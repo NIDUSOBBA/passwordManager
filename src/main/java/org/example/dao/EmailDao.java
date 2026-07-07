@@ -4,6 +4,7 @@ import org.example.dto.EmailDto;
 import org.example.utile.AppLogger;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +17,12 @@ public class EmailDao {
 
     public void create(String email) {
         String insertQuery = """
-                INSERT INTO email (email)
-                VALUES (?);
+                INSERT INTO email (email,created_at)
+                VALUES (?,?);
                 """;
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, email);
+            statement.setObject(2, LocalDateTime.now());
             statement.executeUpdate();
         } catch (Exception e) {
             AppLogger.error("Email create exception: ", e);
