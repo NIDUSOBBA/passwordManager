@@ -29,9 +29,7 @@ public class Main {
             }
 
             Launcher.start(masterKeyService,metadataDao,connection);
-            while (Launcher.windowClosed){
-                Thread.sleep(200);
-            }
+
         } catch (Exception e) {
             System.err.println("Launcher initialize exception: " + e.getMessage());
         }
