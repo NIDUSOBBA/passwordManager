@@ -49,7 +49,8 @@ public class EmailDao {
     public List<EmailDto> getAll() {
         String selectQuery = """
                 SELECT id, email 
-                FROM email;
+                FROM email
+                GROUP BY id;
                 """;
         List<EmailDto> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
@@ -68,15 +69,34 @@ public class EmailDao {
 
     public void deleteById(int id) {
         String deleteQuery = """
-                DELETE *
-                FROM email
+                DELETE FROM email
                 WHERE id = ?;
                 """;
         try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
             statement.setInt(1, id);
-            statement.executeQuery();
+            statement.execute();
         } catch (SQLException e) {
             AppLogger.error("Email deleteById exception: ", e);
+        }
+    }
+
+    public EmailDto getLast() {
+        String selectQuery = """
+                SELECT *
+                FROM email
+                WHERE id = (
+                 SELECT MAX(id)
+                 FROM email
+                );
+                """;
+        try(Statement statement = connection.createStatement()) {
+            ResultSet execute = statement.executeQuery(selectQuery);
+            return new EmailDto(
+                    execute.getInt("id"),
+                    execute.getString("email")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

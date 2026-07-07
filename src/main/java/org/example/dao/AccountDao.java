@@ -62,7 +62,8 @@ public class AccountDao {
     public List<AccountResponseDto> getAll() {
         String selectQuery = """
                 SELECT id, service_name, email_id, username, password_id, created_at, updated_at
-                FROM account;
+                FROM account
+                GROUP BY id;
                 """;
         List<AccountResponseDto> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {

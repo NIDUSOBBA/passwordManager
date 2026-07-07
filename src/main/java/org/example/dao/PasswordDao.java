@@ -54,7 +54,8 @@ public class PasswordDao {
     public List<PasswordDto> getAll() {
         String selectQuery = """
                 SELECT id, encrypted_password
-                FROM password;
+                FROM password
+                GROUP BY id;
                 """;
         List<PasswordDto> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
