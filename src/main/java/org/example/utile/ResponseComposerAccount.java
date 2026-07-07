@@ -4,9 +4,6 @@ import org.example.dao.EmailDao;
 import org.example.dao.PasswordDao;
 import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountResponseDtoCompose;
-import org.example.dto.EmailDto;
-import org.example.dto.PasswordDto;
-
 import java.util.List;
 
 public class ResponseComposerAccount {
@@ -19,21 +16,27 @@ public class ResponseComposerAccount {
         this.passwordDao = passwordDao;
     }
 
-    public AccountResponseDtoCompose compose(AccountResponseDto accountResponseDto){
-        EmailDto emailDto = emailDao.getById(accountResponseDto.email());
-        PasswordDto passwordDto = passwordDao.getById(accountResponseDto.encryptedPassword());
+    public AccountResponseDtoCompose compose(AccountResponseDto accountResponseDto) {
+        String email = "";
+        if (accountResponseDto.email() != 0) {
+            email = emailDao.getById(accountResponseDto.email()).email();
+        }
+        String password = "";
+        if (accountResponseDto.encryptedPassword() != 0) {
+            password = passwordDao.getById(accountResponseDto.encryptedPassword()).encryptedPassword();
+        }
         return new AccountResponseDtoCompose(
                 accountResponseDto.id(),
                 accountResponseDto.serviceName(),
-                emailDto.email(),
+                email,
                 accountResponseDto.username(),
-                passwordDto.encryptedPassword(),
+                password,
                 accountResponseDto.created(),
                 accountResponseDto.updated()
         );
     }
 
-    public List<AccountResponseDtoCompose> compose(List<AccountResponseDto> accountResponseDto){
+    public List<AccountResponseDtoCompose> compose(List<AccountResponseDto> accountResponseDto) {
         return accountResponseDto.stream().map(this::compose).toList();
     }
 }

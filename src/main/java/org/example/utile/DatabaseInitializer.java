@@ -11,7 +11,7 @@ public class DatabaseInitializer {
                 CREATE TABLE IF NOT EXISTS vault_metadata (
                     id INTEGER PRIMARY KEY CHECK (id = 1),
                     salt TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    created_at TIMESTAMP 
                 );
                 """;
         String createPasswordVaultTable = """
@@ -19,14 +19,14 @@ public class DatabaseInitializer {
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 encrypted_password TEXT NOT NULL,
                                 password_fingerprint TEXT UNIQUE,
-                                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                                created_at DATETIME 
                             );
                 """;
         String createEmailTable = """
                 CREATE TABLE IF NOT EXISTS email (
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 email TEXT NOT NULL UNIQUE,
-                                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                                created_at DATETIME 
                             );
                 """;
         String createAccountTable = """
@@ -35,11 +35,11 @@ public class DatabaseInitializer {
                                 service_name TEXT NOT NULL UNIQUE,
                                 email_id INTEGER,
                                 username INTEGER,
-                                password_id INTEGER NOT NULL,
-                                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                password_id INTEGER,
+                                created_at DATETIME,
                                 updated_at DATETIME,
                                 FOREIGN KEY (email_id) REFERENCES email(id) ON DELETE SET NULL,
-                                FOREIGN KEY (password_id) REFERENCES password(id) ON DELETE RESTRICT
+                                FOREIGN KEY (password_id) REFERENCES password(id) ON DELETE SET NULL
                             );
                 """;
         try(Statement statement = connection.createStatement()) {

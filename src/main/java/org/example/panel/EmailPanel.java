@@ -12,10 +12,12 @@ import java.awt.*;
 import java.util.List;
 
 public class EmailPanel implements BasePage, BaseMethod{
-    private DefaultTableModel emailModel;
-    private JTable table;
-    private WindowManager windowManager;
     private final EmailService emailService;
+    private DefaultTableModel emailModel;
+    private WindowManager windowManager;
+    private JTable table;
+    private static JComboBox<EmailDto> emailComboBox;
+
 
     public EmailPanel(EmailService emailService) {
         this.emailService = emailService;
@@ -53,12 +55,14 @@ public class EmailPanel implements BasePage, BaseMethod{
 
     @Override
     public void loadTable() {
+        emailComboBox = new JComboBox<>();
         List<EmailDto> all = emailService.getAll();
         for (EmailDto e: all){
             emailModel.addRow(new Object[]{
                     e.id(),
                     e.email()
             });
+            emailComboBox.addItem(e);
         }
     }
 
@@ -73,31 +77,48 @@ public class EmailPanel implements BasePage, BaseMethod{
         if (option == JOptionPane.OK_OPTION){
             String emailText = email.getText();
             if (!emailText.isEmpty()){
-                emailService.create(emailText);
-                EmailDto last = emailService.getLast();
-                emailModel.addRow(new Object[]{last.id(),last.email()});
-                AppLogger.info("Email added");
+                try {
+                    emailService.create(emailText);
+                    EmailDto last = emailService.getLast();
+                    emailModel.addRow(new Object[]{last.id(),last.email()});
+                    emailComboBox.addItem(last);
+                    AppLogger.info("Email added");
+                } catch (Exception e) {
+                    AppLogger.error("Email add exception: ", e);
+                }
             }else {
                 AppLogger.warn("Email can't be empty");
             }
+        }else {
+            AppLogger.warn("Email is not added");
         }
     }
 
     @Override
     public void delete() {
-        int tableSelectedRow = table.getSelectedRow();
-        if (tableSelectedRow >= 0){
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow >= 0){
             int confirmDialog = JOptionPane.showConfirmDialog(windowManager, "Delete email?");
             if (confirmDialog == JOptionPane.YES_OPTION){
-                emailModel.removeRow(tableSelectedRow);
-                emailService.deleteById(tableSelectedRow);
-                AppLogger.info("Email deleted");
+                int id = (int) emailModel.getValueAt(selectedRow, 0);
+                try {
+                    emailModel.removeRow(selectedRow);
+                    emailService.deleteById(id);
+                    emailComboBox.removeItemAt(selectedRow);
+                    AppLogger.info("Email deleted");
+                } catch (Exception e) {
+                    AppLogger.error("Email delete exception: ", e);
+                }
             }
         }else {
             AppLogger.warn("Email is not selected");
         }
 
 
+    }
+
+    public static JComboBox<EmailDto> getEmailComboBox(){
+        return emailComboBox;
     }
 
 

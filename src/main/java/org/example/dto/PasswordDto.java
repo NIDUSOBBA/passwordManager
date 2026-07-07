@@ -6,7 +6,6 @@ public record PasswordDto(
 ) {
     @Override
     public String toString() {
-        return "id=" + id +
-                ", encryptedPassword=" + encryptedPassword;
+        return encryptedPassword;
     }
 }

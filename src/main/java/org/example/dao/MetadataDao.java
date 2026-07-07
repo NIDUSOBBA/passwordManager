@@ -3,6 +3,7 @@ package org.example.dao;
 import org.example.utile.AppLogger;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class MetadataDao {
 
@@ -14,11 +15,12 @@ public class MetadataDao {
 
     public void create(byte[] bytes) {
         String createQuery = """
-                INSERT INTO vault_metadata (id, salt) 
-                VALUES (1, ?);
+                INSERT INTO vault_metadata (id, salt,created_at) 
+                VALUES (1, ?, ?);
                 """;
         try (PreparedStatement preparedStatement = connection.prepareStatement(createQuery)) {
             preparedStatement.setBytes(1, bytes);
+            preparedStatement.setObject(2, LocalDateTime.now());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             AppLogger.error("Metadata create exception: ", e);

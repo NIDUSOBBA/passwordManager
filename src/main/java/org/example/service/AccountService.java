@@ -40,6 +40,14 @@ public class AccountService   {
         return responseComposerAccount.compose(accountDao.getAll());
     }
 
+    public AccountResponseDto getLast(){
+        return accountDao.getLast();
+    }
+
+    public AccountResponseDtoCompose getLastCompose(){
+        return responseComposerAccount.compose(accountDao.getLast());
+    }
+
     public void update(AccountUpdateDto account) {
         accountDao.update(account);
 
