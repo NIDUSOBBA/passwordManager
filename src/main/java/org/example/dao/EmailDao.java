@@ -2,6 +2,7 @@ package org.example.dao;
 
 import org.example.dto.EmailDto;
 import org.example.utile.AppLogger;
+import org.example.utile.TimestampUtil;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class EmailDao {
                 """;
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, email);
-            statement.setObject(2, LocalDateTime.now());
+            statement.setTimestamp(2, TimestampUtil.getCurrentTimestamp());
             statement.executeUpdate();
         } catch (Exception e) {
             AppLogger.error("Email create exception: ", e);

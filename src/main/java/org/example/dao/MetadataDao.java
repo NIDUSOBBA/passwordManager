@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.utile.AppLogger;
+import org.example.utile.TimestampUtil;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class MetadataDao {
                 """;
         try (PreparedStatement preparedStatement = connection.prepareStatement(createQuery)) {
             preparedStatement.setBytes(1, bytes);
-            preparedStatement.setObject(2, LocalDateTime.now());
+            preparedStatement.setTimestamp(2, TimestampUtil.getCurrentTimestamp());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             AppLogger.error("Metadata create exception: ", e);

@@ -3,10 +3,9 @@ package org.example.dao;
 import org.example.dto.AccountCreateDto;
 import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountUpdateDto;
-import org.example.utile.AppLogger;
+import org.example.utile.TimestampUtil;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,6 @@ public class AccountDao {
     }
 
     public void crete(AccountCreateDto account) {
-        LocalDateTime localDateTime = LocalDateTime.now();
         String insertQuery = """
                 INSERT INTO account (service_name, email_id, username, password_id, created_at, updated_at)
                 VALUES (?, ?, ?, ?, ?,?);
@@ -30,12 +28,12 @@ public class AccountDao {
             preparedStatement.setInt(2, account.email());
             preparedStatement.setString(3, account.username());
             preparedStatement.setInt(4, account.encryptedPassword());
-            preparedStatement.setObject(5, LocalDateTime.now());
-            preparedStatement.setObject(6, LocalDateTime.now());
+            preparedStatement.setTimestamp(5, TimestampUtil.getCurrentTimestamp());
+            preparedStatement.setTimestamp(6, TimestampUtil.getCurrentTimestamp());
 
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException("Dublicat account");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -88,8 +86,9 @@ public class AccountDao {
                 ));
             }
         } catch (Exception e) {
-            System.err.println("Account getAll exception: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
+        System.out.println(resultList);
         return resultList;
     }
 
@@ -104,7 +103,7 @@ public class AccountDao {
             statement.setInt(2, account.emailId());
             statement.setString(3, account.username());
             statement.setInt(4, account.passwordId());
-            statement.setObject(5, LocalDateTime.now());
+            statement.setTimestamp(5, TimestampUtil.getCurrentTimestamp());
             statement.setInt(6, account.id());
             statement.executeUpdate();
         } catch (SQLException e) {

@@ -3,9 +3,9 @@ package org.example.dao;
 import org.example.dto.PasswordDto;
 import org.example.service.VaultEncryptionService;
 import org.example.utile.AppLogger;
+import org.example.utile.TimestampUtil;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class PasswordDao {
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setBytes(1, vaultEncryptionService.encryptForStorage(password));
             statement.setString(2, vaultEncryptionService.generateFingerprint(password));
-            statement.setObject(3, LocalDateTime.now());
+            statement.setTimestamp(3, TimestampUtil.getCurrentTimestamp());
             statement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException("Dublicat password");
@@ -72,22 +72,6 @@ public class PasswordDao {
             AppLogger.error("Password getAll exception: ", e);
         }
         return resultList;
-    }
-
-    public void updateById(PasswordDto passwordDto) {
-        String updateQuery = """
-                UPDATE password
-                SET encrypted_password = ?, password_fingerprint = ?, created_at = CURRENT_TIMESTAMP
-                WHERE id = ?;
-                """;
-        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-            statement.setBytes(1, vaultEncryptionService.encryptForStorage(passwordDto.encryptedPassword()));
-            statement.setString(2, vaultEncryptionService.generateFingerprint(passwordDto.encryptedPassword()));
-            statement.setInt(3, passwordDto.id());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            AppLogger.error("Password updateById exception: ", e);
-        }
     }
 
     public void deleteById(int id) {
