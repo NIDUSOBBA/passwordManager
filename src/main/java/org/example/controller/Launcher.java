@@ -31,6 +31,7 @@ public class Launcher {
         }
     }
 
+    //Создание всех основных классов приложения
     public static void managerVaultIn(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection,CountDownLatch countDownLatch) throws Exception {
         VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKeyService.get(), metadataDao);
         PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
@@ -43,6 +44,7 @@ public class Launcher {
                 countDownLatch);
     }
 
+    //Запуск основного окна приложения
     public static void windowIn(AccountService accountService, PasswordService passwordService, EmailService emailService,CountDownLatch countDownLatch) {
         LogPanel logPanel = new LogPanel();
         AccountPanel accountPanel = new AccountPanel(accountService);
@@ -60,7 +62,7 @@ public class Launcher {
             } catch (Exception e) {
                 AppLogger.error("Exception windows initialization: ", e);
             }
-            WindowManager app = new WindowManager(logPanel, accountPanel, passwordPanel, emailPanel);
+            MasterWindow app = new MasterWindow(logPanel, accountPanel, passwordPanel, emailPanel);
             passwordPanel.setWindowManager(app);
             emailPanel.setWindowManager(app);
             accountPanel.setWindowManager(app);

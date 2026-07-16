@@ -24,24 +24,8 @@ public class AccountService   {
         accountDao.crete(account);
     }
 
-    public AccountResponseDto getById(int id){
-        return accountDao.getById(id);
-    }
-    public List<AccountResponseDto> getAll(){
-        return accountDao.getAll();
-    }
-
-    public AccountResponseDtoCompose getByIdCompose(int id){
-        return responseComposerAccount.compose(
-                accountDao.getById(id)
-        );
-    }
     public List<AccountResponseDtoCompose> getAllCompose(){
         return responseComposerAccount.compose(accountDao.getAll());
-    }
-
-    public AccountResponseDto getLast(){
-        return accountDao.getLast();
     }
 
     public AccountResponseDtoCompose getLastCompose(){

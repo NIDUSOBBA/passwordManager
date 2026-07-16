@@ -4,8 +4,6 @@ import org.example.utile.AppLogger;
 import org.example.utile.TimestampUtil;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-
 public class MetadataDao {
 
     private final Connection connection;
@@ -24,7 +22,7 @@ public class MetadataDao {
             preparedStatement.setTimestamp(2, TimestampUtil.getCurrentTimestamp());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            AppLogger.error("Metadata create exception: ", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -37,8 +35,7 @@ public class MetadataDao {
             ResultSet resultSet = statement.executeQuery(selectQuery);
             return resultSet.getBytes("salt");
         } catch (SQLException e) {
-            AppLogger.error("Metadata get exception: ", e);
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

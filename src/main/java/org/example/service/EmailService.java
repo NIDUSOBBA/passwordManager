@@ -17,10 +17,6 @@ public class EmailService {
         emailDao.create(line);
     }
 
-    public EmailDto getById(int id) {
-        return emailDao.getById(id);
-    }
-
     public EmailDto getLast(){
         return emailDao.getLast();
     }

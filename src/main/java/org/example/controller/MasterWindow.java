@@ -9,14 +9,14 @@ import org.example.utile.AppLogger;
 import javax.swing.*;
 import java.awt.*;
 
-public class WindowManager extends JFrame {
+public class MasterWindow extends JFrame {
 
-    private LogPanel logPanel;
-    private AccountPanel accountPanel;
-    private PasswordPanel passwordPanel;
-    private EmailPanel emailPanel;
+    private final LogPanel logPanel;
+    private final AccountPanel accountPanel;
+    private final PasswordPanel passwordPanel;
+    private final EmailPanel emailPanel;
 
-    public WindowManager(LogPanel logPanel, AccountPanel accountPanel, PasswordPanel passwordPanel, EmailPanel emailPanel) throws HeadlessException {
+    public MasterWindow(LogPanel logPanel, AccountPanel accountPanel, PasswordPanel passwordPanel, EmailPanel emailPanel) throws HeadlessException {
         this.logPanel = logPanel;
         this.accountPanel = accountPanel;
         this.passwordPanel = passwordPanel;
@@ -28,12 +28,12 @@ public class WindowManager extends JFrame {
     }
 
     public void windowIn() {
-        setTitle("Менеджер Аккаунтов");
+        setTitle("Account Manager");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         assemblingWindow();
-        AppLogger.info("Приложение запущено успешно");
+        AppLogger.info("Application running");
     }
 
     public void assemblingWindow() {
@@ -48,9 +48,9 @@ public class WindowManager extends JFrame {
 
     public JTabbedPane tabsInit() {
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("🔑 Пароли", passwordPanel.createPanel());
-        tabs.addTab("🔐 Аккаунты", accountPanel.createPanel());
-        tabs.addTab("📧 Почта", emailPanel.createPanel());
+        tabs.addTab("🔑 Password", passwordPanel.createPanel());
+        tabs.addTab("🔐 Account", accountPanel.createPanel());
+        tabs.addTab("📧 Mail", emailPanel.createPanel());
         return tabs;
     }
 

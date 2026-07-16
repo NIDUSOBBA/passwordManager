@@ -1,6 +1,6 @@
 package org.example.panel;
 
-import org.example.controller.WindowManager;
+import org.example.controller.MasterWindow;
 import org.example.dto.PasswordDto;
 import org.example.service.PasswordService;
 import org.example.utile.AppLogger;
@@ -8,13 +8,14 @@ import org.example.utile.DefaultModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.List;
 
-public class PasswordPanel implements BasePage, BaseMethod {
+public class PasswordPanel extends TableBasePage implements TableBaseMethod {
     private final PasswordService passwordService;
     private DefaultTableModel passwordModel;
-    private WindowManager windowManager;
+    private MasterWindow masterWindow;
     private JTable table;
     private static JComboBox<PasswordDto> passwordComboBox;
 
@@ -24,16 +25,18 @@ public class PasswordPanel implements BasePage, BaseMethod {
     }
 
     @Override
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
+    public void setWindowManager(MasterWindow masterWindow) {
+        this.masterWindow = masterWindow;
     }
 
 
     @Override
     public JPanel createPanel() {
-        String[] cols = {"id", "Пароль"};
+        String[] cols = {"id", "Password"};
         passwordModel = DefaultModel.creteModel(cols);
         table = new JTable(passwordModel);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(passwordModel);
+        table.setRowSorter(sorter);
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -42,23 +45,10 @@ public class PasswordPanel implements BasePage, BaseMethod {
     }
 
     @Override
-    public void buttonIn(JPanel jPanel) {
-        JButton btnAdd = new JButton("Добавить");
-        btnAdd.addActionListener(e -> add());
-        JButton bthDelete = new JButton("Удалить");
-        bthDelete.addActionListener(e -> delete());
-        JPanel batons = new JPanel();
-        batons.add(btnAdd);
-        batons.add(bthDelete);
-        jPanel.add(batons, BorderLayout.SOUTH);
-    }
-
-    @Override
     public void loadTable() {
         passwordComboBox = new JComboBox<>();
         List<PasswordDto> all = passwordService.getAll();
-        System.out.println("All passwords: " + all);
-        if (!all.isEmpty()){
+        if (!all.isEmpty()) {
             for (PasswordDto p : all) {
                 passwordModel.addRow(new Object[]{
                         p.id(),
@@ -75,7 +65,7 @@ public class PasswordPanel implements BasePage, BaseMethod {
         Object[] message = {
                 "Password", password,
         };
-        int option = JOptionPane.showConfirmDialog(windowManager, message, "New password", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(masterWindow, message, "New password", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String passwordText = password.getText();
             if (!passwordText.isEmpty()) {
@@ -92,21 +82,24 @@ public class PasswordPanel implements BasePage, BaseMethod {
                 AppLogger.warn("Password can't be empty");
             }
         } else {
-            AppLogger.info("Password is not added");
+            AppLogger.warn("Password is not added");
         }
     }
 
     @Override
     public void delete() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow >= 0) {
-            int confirmDialog = JOptionPane.showConfirmDialog(windowManager, "Delete password?");
+        int viewRow = table.getSelectedRow();
+        if (viewRow >= 0) {
+            int confirmDialog = JOptionPane.showConfirmDialog(masterWindow, "Delete password?");
             if (confirmDialog == JOptionPane.YES_OPTION) {
-                int id = (int) passwordModel.getValueAt(selectedRow, 0);
+                int modelRow = table.convertRowIndexToModel(viewRow);
+
+                int id = (int) passwordModel.getValueAt(modelRow, 0);
+
                 try {
-                    passwordModel.removeRow(selectedRow);
+                    passwordModel.removeRow(modelRow);
                     passwordService.deleteById(id);
-                    passwordComboBox.removeItemAt(selectedRow);
+                    passwordComboBox.removeItemAt(viewRow);
                     AppLogger.info("Password deleted");
                 } catch (Exception e) {
                     AppLogger.error("Password delete exception: ", e);
@@ -120,6 +113,5 @@ public class PasswordPanel implements BasePage, BaseMethod {
     public static JComboBox<PasswordDto> getPasswordComboBox() {
         return passwordComboBox;
     }
-
 
 }

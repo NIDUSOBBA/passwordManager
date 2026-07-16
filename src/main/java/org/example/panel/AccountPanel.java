@@ -1,6 +1,6 @@
 package org.example.panel;
 
-import org.example.controller.WindowManager;
+import org.example.controller.MasterWindow;
 import org.example.dto.*;
 import org.example.service.AccountService;
 import org.example.utile.AppLogger;
@@ -8,16 +8,17 @@ import org.example.utile.DefaultModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class AccountPanel implements BasePage, BaseMethod {
+public class AccountPanel extends TableBasePage implements TableBaseMethod {
     private final AccountService accountService;
     private DefaultTableModel accountModel;
     private JTable table;
-    private WindowManager windowManager;
+    private MasterWindow masterWindow;
 
     public AccountPanel(AccountService accountService) {
         this.accountService = accountService;
@@ -25,9 +26,11 @@ public class AccountPanel implements BasePage, BaseMethod {
 
     @Override
     public JPanel createPanel() {
-        String[] cols = {"id", "Сервис", "Почта", "Имя", "Пароль", "Время создания", "Время обновления"};
+        String[] cols = {"id", "Service", "Mail", "Name", "Password", "Created", "Updated"};
         accountModel = DefaultModel.creteModel(cols);
         table = new JTable(accountModel);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(accountModel);
+        table.setRowSorter(sorter);
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -47,32 +50,12 @@ public class AccountPanel implements BasePage, BaseMethod {
     }
 
     @Override
-    public void buttonIn(JPanel jPanel) {
-        JButton btnAdd = new JButton("Добавить");
-        btnAdd.addActionListener(e -> add());
-        JButton bthDelete = new JButton("Удалить");
-        bthDelete.addActionListener(e -> delete());
-
-        JPanel btns = new JPanel();
-        btns.add(btnAdd);
-        btns.add(bthDelete);
-        jPanel.add(btns, BorderLayout.SOUTH);
-    }
-
-    @Override
     public void loadTable() {
         List<AccountResponseDtoCompose> allCompose = accountService.getAllCompose();
         for (AccountResponseDtoCompose a : allCompose) {
-            accountModel.addRow(new Object[]{
-                    a.id(),
-                    a.serviceName(),
-                    a.email(),
-                    a.username(),
-                    a.encryptedPassword(),
-                    a.created(),
-                    a.updated()
-            });
+            accountModel.addRow(createColumns(a));
         }
+        System.out.println();
     }
 
     @Override
@@ -88,7 +71,7 @@ public class AccountPanel implements BasePage, BaseMethod {
                 "Password", password
         };
 
-        int option = JOptionPane.showConfirmDialog(windowManager, message, "New account", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(masterWindow, message, "New account", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             if (service.getText().isEmpty()) {
                 AppLogger.warn("Service can't be empty");
@@ -102,33 +85,28 @@ public class AccountPanel implements BasePage, BaseMethod {
                 AccountCreateDto account = new AccountCreateDto(serviceText, emailText.id(), usernameText, passwordText.id());
                 accountService.create(account);
                 AccountResponseDtoCompose last = accountService.getLastCompose();
-                accountModel.addRow(new Object[]{
-                        last.id(),
-                        last.serviceName(),
-                        last.email(),
-                        last.username(),
-                        last.encryptedPassword(),
-                        last.created(),
-                        last.updated()
-                });
+                accountModel.addRow(createColumns(last));
                 AppLogger.info("Account added");
             } catch (Exception e) {
                 AppLogger.error("Account add exception: ", e);
             }
         } else {
-            AppLogger.info("Account not created");
+            AppLogger.warn("Account is not added");
         }
     }
 
     @Override
     public void delete() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow >= 0) {
-            int confirmDialog = JOptionPane.showConfirmDialog(windowManager, "Delete account?");
+        int viewRow = table.getSelectedRow();
+        if (viewRow >= 0) {
+            int confirmDialog = JOptionPane.showConfirmDialog(masterWindow, "Delete account?");
             if (confirmDialog == JOptionPane.YES_OPTION) {
-                int id = (int) accountModel.getValueAt(selectedRow, 0);
+                int modelRow = table.convertRowIndexToModel(viewRow);
+
+                int id = (int) accountModel.getValueAt(modelRow, 0);
+
                 try {
-                    accountModel.removeRow(selectedRow);
+                    accountModel.removeRow(modelRow);
                     accountService.deleteById(id);
                     AppLogger.info("Account deleted");
                 } catch (Exception e) {
@@ -165,7 +143,7 @@ public class AccountPanel implements BasePage, BaseMethod {
                     "Password", password,
                     "New password", newPassword
             };
-            int option = JOptionPane.showConfirmDialog(windowManager, message, "Edited account", JOptionPane.OK_CANCEL_OPTION);
+            int option = JOptionPane.showConfirmDialog(masterWindow, message, "Edited account", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
                 String serviceText = service.getText();
                 EmailDto emailText = (EmailDto) newEmail.getSelectedItem();
@@ -187,7 +165,7 @@ public class AccountPanel implements BasePage, BaseMethod {
                 } catch (Exception e) {
                     AppLogger.error("Account edited exception: ", e);
                 }
-            }else {
+            } else {
                 AppLogger.info("Account not updated");
             }
         } else {
@@ -195,9 +173,21 @@ public class AccountPanel implements BasePage, BaseMethod {
         }
     }
 
+    private Object[] createColumns(AccountResponseDtoCompose account) {
+        return new Object[]{
+                account.id(),
+                account.serviceName(),
+                account.email(),
+                account.username(),
+                account.encryptedPassword(),
+                account.created(),
+                account.updated()
+        };
+    }
+
     @Override
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
+    public void setWindowManager(MasterWindow masterWindow) {
+        this.masterWindow = masterWindow;
     }
 
 }

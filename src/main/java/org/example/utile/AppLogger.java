@@ -44,11 +44,6 @@ public class AppLogger {
         initialized = true;
     }
 
-    public static AppLogger getInstance() {
-        if (initialized) throw new IllegalStateException("Logger не инициализирован!");
-        return instance;
-    }
-
     public static void info(String msg) {
         log("INFO", msg);
     }

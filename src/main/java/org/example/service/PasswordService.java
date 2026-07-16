@@ -17,10 +17,6 @@ public class PasswordService   {
         passwordDao.crete(password);
     }
 
-    public PasswordDto getById(int id){
-        return passwordDao.getById(id);
-    }
-
     public PasswordDto getLast(){
         return passwordDao.getLast();
     }

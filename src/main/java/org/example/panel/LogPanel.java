@@ -5,10 +5,9 @@ import org.example.utile.AppLogger;
 import javax.swing.*;
 import java.awt.*;
 
-public class LogPanel implements BasePage{
+public class LogPanel {
     private JTextPane logPane;
 
-    @Override
     public JPanel createPanel() {
         logPane = new JTextPane();
         logPane.setEditable(false);
@@ -19,7 +18,7 @@ public class LogPanel implements BasePage{
 
 
         JPanel logHeader = new JPanel(new BorderLayout());
-        logHeader.add(new JLabel(" 📋 Консоль "), BorderLayout.WEST);
+        logHeader.add(new JLabel(" 📋 Console "), BorderLayout.WEST);
         buttonIn(logHeader);
 
         JPanel logPanel = new JPanel(new BorderLayout());
@@ -27,20 +26,19 @@ public class LogPanel implements BasePage{
         logPanel.add(logScroll, BorderLayout.CENTER);
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            AppLogger.error("Необработанное исключение в потоке " + t.getName(), e);
+            AppLogger.error("Unhandled exception in the stream " + t.getName(), e);
         });
 
         AppLogger.init(logPane);
         return logPanel;
     }
 
-    @Override
     public void buttonIn(JPanel jPanel) {
-        JButton btnClearLogs = new JButton("Очистить логи");
+        JButton btnClearLogs = new JButton("Clear logs");
         btnClearLogs.addActionListener(e -> {
             try {
                 logPane.getStyledDocument().remove(0, logPane.getDocument().getLength());
-                AppLogger.info("Логи очищены");
+                AppLogger.info("Log clear");
             } catch (Exception ex) {
                 System.err.println("Create Logger button exception: " + ex.getMessage());
             }
