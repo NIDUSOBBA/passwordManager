@@ -29,7 +29,7 @@ public class PasswordDao {
             statement.setTimestamp(3, TimestampUtil.getCurrentTimestamp());
             statement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException("Dublicat password");
+            throw new RuntimeException("Password duplicated");
         }
     }
 
@@ -48,9 +48,8 @@ public class PasswordDao {
                     ));
 
         } catch (Exception e) {
-            AppLogger.error("Password getById exception: ", e);
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public List<PasswordDto> getAll() {
@@ -69,7 +68,7 @@ public class PasswordDao {
                         )));
             }
         } catch (Exception e) {
-            AppLogger.error("Password getAll exception: ", e);
+            throw new RuntimeException(e);
         }
         return resultList;
     }
@@ -83,7 +82,7 @@ public class PasswordDao {
             statement.setInt(1, id);
             statement.execute();
         } catch (SQLException e) {
-            AppLogger.error("Password deleteById exception: ", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -103,8 +102,7 @@ public class PasswordDao {
                     vaultEncryptionService.decryptFromStorage(resultSet.getBytes("encrypted_password")
                     ));
         } catch (Exception e) {
-            AppLogger.error("Password getLast exception: ", e);
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

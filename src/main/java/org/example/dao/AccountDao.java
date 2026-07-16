@@ -33,7 +33,7 @@ public class AccountDao {
 
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("Account duplicated");
         }
     }
 
@@ -58,9 +58,8 @@ public class AccountDao {
                     resultSet.getTimestamp("updated_at")
             );
         } catch (SQLException e) {
-            System.err.println("Account getById exception: " + e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public List<AccountResponseDto> getAll() {
@@ -88,7 +87,6 @@ public class AccountDao {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        System.out.println(resultList);
         return resultList;
     }
 
@@ -107,7 +105,7 @@ public class AccountDao {
             statement.setInt(6, account.id());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Account updateById exception: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -120,7 +118,7 @@ public class AccountDao {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.err.println("Account deleteById exception: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

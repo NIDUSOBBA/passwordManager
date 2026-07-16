@@ -5,7 +5,6 @@ import org.example.utile.AppLogger;
 import org.example.utile.TimestampUtil;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class EmailDao {
             statement.setTimestamp(2, TimestampUtil.getCurrentTimestamp());
             statement.executeUpdate();
         } catch (Exception e) {
-            AppLogger.error("Email create exception: ", e);
+            throw new RuntimeException("Email duplicated");
         }
     }
 
@@ -44,9 +43,8 @@ public class EmailDao {
                     resultSet.getString("email")
             );
         } catch (SQLException e) {
-            AppLogger.error("Email getById exception: ", e);
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public List<EmailDto> getAll() {
@@ -65,7 +63,7 @@ public class EmailDao {
                 ));
             }
         } catch (SQLException e) {
-            AppLogger.error("Email getAll exception: ", e);
+            throw new RuntimeException(e);
         }
         return resultList;
     }
@@ -79,7 +77,7 @@ public class EmailDao {
             statement.setInt(1, id);
             statement.execute();
         } catch (SQLException e) {
-            AppLogger.error("Email deleteById exception: ", e);
+            throw new RuntimeException(e);
         }
     }
 
