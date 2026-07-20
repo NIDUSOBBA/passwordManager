@@ -55,7 +55,6 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
         for (AccountResponseDtoCompose a : allCompose) {
             accountModel.addRow(createColumns(a));
         }
-        System.out.println();
     }
 
     @Override
@@ -152,7 +151,8 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
                 try {
                     AccountUpdateDto account = new AccountUpdateDto(id, serviceText, emailText.id(), usernameText, passwordText.id());
                     accountService.update(account);
-                    AccountResponseDtoCompose last = accountService.getLastCompose();
+                    AccountResponseDtoCompose last = accountService.getById(id);
+                    System.out.println(last.encryptedPassword());
                     accountModel.setValueAt(last.id(), selectedRow, 0);
                     accountModel.setValueAt(last.serviceName(), selectedRow, 1);
                     accountModel.setValueAt(last.email(), selectedRow, 2);

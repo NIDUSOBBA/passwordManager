@@ -5,6 +5,7 @@ import org.example.dto.EmailDto;
 import org.example.service.EmailService;
 import org.example.utile.AppLogger;
 import org.example.utile.DefaultModel;
+import org.example.utile.NotifyDataChanged;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -99,6 +100,7 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
                     emailService.deleteById(id);
                     emailComboBox.removeItemAt(viewRow);
                     AppLogger.info("Email deleted");
+                    NotifyDataChanged.syncAfterRemoval();
                 } catch (Exception e) {
                     AppLogger.error("Email delete exception: ", e);
                 }

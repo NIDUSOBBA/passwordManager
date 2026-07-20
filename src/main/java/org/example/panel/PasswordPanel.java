@@ -5,6 +5,7 @@ import org.example.dto.PasswordDto;
 import org.example.service.PasswordService;
 import org.example.utile.AppLogger;
 import org.example.utile.DefaultModel;
+import org.example.utile.NotifyDataChanged;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -101,6 +102,7 @@ public class PasswordPanel extends TableBasePage implements TableBaseMethod {
                     passwordService.deleteById(id);
                     passwordComboBox.removeItemAt(viewRow);
                     AppLogger.info("Password deleted");
+                    NotifyDataChanged.syncAfterRemoval();
                 } catch (Exception e) {
                     AppLogger.error("Password delete exception: ", e);
                 }
