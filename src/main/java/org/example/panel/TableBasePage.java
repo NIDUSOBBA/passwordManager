@@ -17,6 +17,7 @@ public abstract class TableBasePage {
         btns.add(bthDelete);
         jPanel.add(btns, BorderLayout.SOUTH);
     };
+    abstract void createTable();
     abstract void add();
     abstract void delete();
 }

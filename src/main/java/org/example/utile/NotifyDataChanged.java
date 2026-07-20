@@ -10,6 +10,7 @@ public class NotifyDataChanged {
     }
 
     public static void syncAfterRemoval(){
+        accountPanel.deleteAllRow();
         accountPanel.loadTable();
     }
 }

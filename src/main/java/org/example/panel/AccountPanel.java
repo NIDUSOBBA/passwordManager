@@ -26,6 +26,16 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
 
     @Override
     public JPanel createPanel() {
+        createTable();
+        JPanel panel = new JPanel(new BorderLayout());
+        buttonIn(panel);
+        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        loadTable();
+        return panel;
+    }
+
+    @Override
+    public void createTable(){
         String[] cols = {"id", "Service", "Mail", "Name", "Password", "Created", "Updated"};
         accountModel = DefaultModel.creteModel(cols);
         table = new JTable(accountModel);
@@ -42,11 +52,6 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
                 }
             }
         });
-        JPanel panel = new JPanel(new BorderLayout());
-        buttonIn(panel);
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
-        loadTable();
-        return panel;
     }
 
     @Override
@@ -55,6 +60,7 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
         for (AccountResponseDtoCompose a : allCompose) {
             accountModel.addRow(createColumns(a));
         }
+
     }
 
     @Override
@@ -152,7 +158,6 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
                     AccountUpdateDto account = new AccountUpdateDto(id, serviceText, emailText.id(), usernameText, passwordText.id());
                     accountService.update(account);
                     AccountResponseDtoCompose last = accountService.getById(id);
-                    System.out.println(last.encryptedPassword());
                     accountModel.setValueAt(last.id(), selectedRow, 0);
                     accountModel.setValueAt(last.serviceName(), selectedRow, 1);
                     accountModel.setValueAt(last.email(), selectedRow, 2);
@@ -188,6 +193,14 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
     @Override
     public void setWindowManager(MasterWindow masterWindow) {
         this.masterWindow = masterWindow;
+    }
+
+    public void deleteAllRow(){
+        int rowCount = accountModel.getRowCount();
+        while (rowCount != 0){
+            rowCount--;
+            accountModel.removeRow(rowCount);
+        }
     }
 
 }

@@ -33,16 +33,21 @@ public class PasswordPanel extends TableBasePage implements TableBaseMethod {
 
     @Override
     public JPanel createPanel() {
-        String[] cols = {"id", "Password"};
-        passwordModel = DefaultModel.creteModel(cols);
-        table = new JTable(passwordModel);
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(passwordModel);
-        table.setRowSorter(sorter);
+        createTable();
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         loadTable();
         return panel;
+    }
+
+    @Override
+    void createTable() {
+        String[] cols = {"id", "Password"};
+        passwordModel = DefaultModel.creteModel(cols);
+        table = new JTable(passwordModel);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(passwordModel);
+        table.setRowSorter(sorter);
     }
 
     @Override

@@ -32,11 +32,7 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
 
     @Override
     public JPanel createPanel() {
-        String[] cols = {"id", "Mail"};
-        emailModel = DefaultModel.creteModel(cols);
-        table = new JTable(emailModel);
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(emailModel);
-        table.setRowSorter(sorter);
+        createTable();
         JPanel panel = new JPanel(new BorderLayout());
         buttonIn(panel);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -44,6 +40,14 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
         return panel;
     }
 
+    @Override
+    void createTable() {
+        String[] cols = {"id", "Mail"};
+        emailModel = DefaultModel.creteModel(cols);
+        table = new JTable(emailModel);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(emailModel);
+        table.setRowSorter(sorter);
+    }
 
     @Override
     public void loadTable() {
