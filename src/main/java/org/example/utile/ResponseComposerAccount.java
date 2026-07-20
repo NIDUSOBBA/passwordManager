@@ -16,6 +16,7 @@ public class ResponseComposerAccount {
         this.passwordDao = passwordDao;
     }
 
+    //Для пользователя подгоняем внешний вид он будет видеть не зашифрованные данные
     public AccountResponseDtoCompose compose(AccountResponseDto accountResponseDto) {
         String email = "";
         if (accountResponseDto.email() != 0) {

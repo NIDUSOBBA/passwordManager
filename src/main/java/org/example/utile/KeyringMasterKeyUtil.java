@@ -15,7 +15,6 @@ public class KeyringMasterKeyUtil {
         this.keyring = keyring;
     }
 
-
     public void create(String masterKey) throws PasswordAccessException, BackendNotSupportedException {
         keyring.setPassword(KEYRING_SERVICE_NAME, KEYRING_ACCOUNT_NAME, masterKey);
     }

@@ -24,6 +24,10 @@ public class AccountService   {
         accountDao.crete(account);
     }
 
+    public AccountResponseDtoCompose getById(int id){
+        return responseComposerAccount.compose(accountDao.getById(id));
+    }
+
     public List<AccountResponseDtoCompose> getAllCompose(){
         return responseComposerAccount.compose(accountDao.getAll());
     }

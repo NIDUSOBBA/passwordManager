@@ -1,17 +1,18 @@
 package org.example.connection;
 
+import org.example.utile.PathDeterminant;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-
-import static org.example.utile.Const.*;
 
 public class SQLiteConnection {
 
     public static Connection getConnection() {
         Connection connection = null;
+        String bdUrl = "jdbc:sqlite:" + PathDeterminant.locationDisk() + "password_vault.db";
         try {
-            connection = DriverManager.getConnection(BD_URL);
+            connection = DriverManager.getConnection(bdUrl);
             try (Statement statement = connection.createStatement()) {
                 statement.execute("PRAGMA foreign_keys = ON;");
             }

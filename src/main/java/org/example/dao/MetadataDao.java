@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import org.example.utile.AppLogger;
 import org.example.utile.TimestampUtil;
 
 import java.sql.*;

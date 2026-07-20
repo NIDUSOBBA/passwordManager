@@ -11,6 +11,7 @@ import org.example.panel.LogPanel;
 import org.example.panel.PasswordPanel;
 import org.example.service.*;
 import org.example.utile.AppLogger;
+import org.example.utile.NotifyDataChanged;
 import org.example.utile.ResponseComposerAccount;
 
 import javax.swing.*;
@@ -23,7 +24,7 @@ public class Launcher {
 
     public static void start(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        Launcher.managerVaultIn(masterKeyService, metadataDao, connection, countDownLatch);
+        Launcher.managerIn(masterKeyService, metadataDao, connection, countDownLatch);
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
@@ -32,7 +33,7 @@ public class Launcher {
     }
 
     //Создание всех основных классов приложения
-    public static void managerVaultIn(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection,CountDownLatch countDownLatch) throws Exception {
+    public static void managerIn(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection, CountDownLatch countDownLatch) throws Exception {
         VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKeyService.get(), metadataDao);
         PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
         EmailDao emailDao = new EmailDao(connection);
@@ -48,6 +49,7 @@ public class Launcher {
     public static void windowIn(AccountService accountService, PasswordService passwordService, EmailService emailService,CountDownLatch countDownLatch) {
         LogPanel logPanel = new LogPanel();
         AccountPanel accountPanel = new AccountPanel(accountService);
+        NotifyDataChanged.setAccountPanel(accountPanel);
         PasswordPanel passwordPanel = new PasswordPanel(passwordService);
         EmailPanel emailPanel = new EmailPanel(emailService);
         SwingUtilities.invokeLater(() -> {

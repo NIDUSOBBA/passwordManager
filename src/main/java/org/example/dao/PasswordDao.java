@@ -2,7 +2,6 @@ package org.example.dao;
 
 import org.example.dto.PasswordDto;
 import org.example.service.VaultEncryptionService;
-import org.example.utile.AppLogger;
 import org.example.utile.TimestampUtil;
 
 import java.sql.*;

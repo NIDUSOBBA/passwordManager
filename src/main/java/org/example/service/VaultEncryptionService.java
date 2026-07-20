@@ -14,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
 public class VaultEncryptionService {
     private final SecretKey masterKey;
     private final byte[] hmacSecretKey;
-    private final byte[] salt;
 
     public VaultEncryptionService(String masterPassword, MetadataDao metadataDao)
             throws Exception {
@@ -23,13 +22,9 @@ public class VaultEncryptionService {
         if (salt == null) {
             // Первый запуск - генерируем новую соль
             metadataDao.create(PasswordEncryptor.generateSalt());
-            this.salt = metadataDao.get();
-            this.masterKey = PasswordEncryptor.deriveKeyFromPassword(masterPassword.toCharArray(), this.salt);
-        } else {
-            // Загрузка существующей соли
-            this.salt = salt;
-            this.masterKey = PasswordEncryptor.deriveKeyFromPassword(masterPassword.toCharArray(), this.salt);
+            salt = metadataDao.get();
         }
+        this.masterKey = PasswordEncryptor.deriveKeyFromPassword(masterPassword.toCharArray(), salt);
     }
 
     public String generateFingerprint(String password) {

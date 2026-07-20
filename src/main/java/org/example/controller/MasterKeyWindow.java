@@ -77,7 +77,7 @@ public class MasterKeyWindow extends JDialog {
     private void handleContinue() {
         int choice = JOptionPane.showConfirmDialog(this,
                 "<html><b>Are you sure you want to install this key?</b><br>" +
-                        "ATTENTION: The key cannot be changed after creation.<br>",
+                        "ATTENTION: The key cannot be changed after creation. Please remember your key.<br>",
                 "Confirmation of the key installation",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE
