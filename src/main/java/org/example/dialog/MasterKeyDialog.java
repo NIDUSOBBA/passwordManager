@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.dialog;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import org.example.utile.AppLogger;
@@ -8,7 +8,7 @@ import java.awt.*;
 import java.security.SecureRandom;
 
 //Диалог для создания нового мастер ключа
-public class MasterKeyWindow extends JDialog {
+public class MasterKeyDialog extends JDialog {
 
     private JTextField masterKeyField;
     private boolean setupCompleted = false;
@@ -17,19 +17,18 @@ public class MasterKeyWindow extends JDialog {
     private static final String PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
 
 
-    public MasterKeyWindow(Frame parent) {
+    public MasterKeyDialog(Frame parent) {
         super(parent, "Enter the master key", ModalityType.APPLICATION_MODAL);
-        setSize(400, 180);
+        setSize(800, 310);
         setLocationRelativeTo(parent);
         setResizable(false);
-
         FlatLightLaf.setup();
-
+        add(createHtmlPane());
         initComponents();
     }
 
     private void initComponents() {
-        setLayout(new GridLayout(3, 2, 10, 10));
+        setLayout(new GridLayout(2, 1, 10, 10));
 
         JPanel passPanel = new JPanel(new BorderLayout(5, 0));
         masterKeyField = new JTextField();
@@ -113,5 +112,21 @@ public class MasterKeyWindow extends JDialog {
 
     public boolean isSetupCompleted() {
         return setupCompleted;
+    }
+
+    public JTextPane createHtmlPane() {
+        JTextPane htmlPane = new JTextPane();
+        htmlPane.setContentType("text/html");
+        htmlPane.setEditable(false);
+
+        htmlPane.setText("<html><body>" +
+                "<h1 style='color: #333;'>Master Key</h1>" +
+                "<p style='color: #666;'>The master key is a secret code that is used to encrypt and decrypt your data." +
+                "It is important to keep your master key safe and secure." +
+                "If it is lost, access to the data may be lost" +
+                "</p>");
+
+        htmlPane.setText(htmlPane.getText());
+        return htmlPane;
     }
 }
