@@ -2,7 +2,6 @@ package org.example.service;
 
 import org.example.dao.AccountDao;
 import org.example.dto.AccountCreateDto;
-import org.example.dto.AccountResponseDto;
 import org.example.dto.AccountResponseDtoCompose;
 import org.example.dto.AccountUpdateDto;
 import org.example.utile.ResponseComposerAccount;
@@ -21,7 +20,7 @@ public class AccountService   {
     }
 
     public void create(AccountCreateDto account) {
-        accountDao.crete(account);
+        accountDao.create(account);
     }
 
     public AccountResponseDtoCompose getById(int id){
@@ -38,7 +37,6 @@ public class AccountService   {
 
     public void update(AccountUpdateDto account) {
         accountDao.update(account);
-
     }
 
     public void deleteById(int id){

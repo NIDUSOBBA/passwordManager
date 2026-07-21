@@ -3,13 +3,12 @@ package org.example;
 import com.github.javakeyring.Keyring;
 import org.example.connection.SQLiteConnection;
 import org.example.controller.Launcher;
-import org.example.controller.MasterKeyWindow;
+import org.example.dialog.MasterKeyDialog;
 import org.example.dao.MetadataDao;
 import org.example.service.MasterKeyService;
 import org.example.utile.DatabaseInitializer;
 import org.example.utile.KeyringMasterKeyUtil;
 
-import javax.swing.*;
 import java.sql.Connection;
 
 public class Main {
@@ -17,10 +16,10 @@ public class Main {
         try (Connection connection = SQLiteConnection.getConnection()) {
             DatabaseInitializer.initializeDatabase(connection);
             MetadataDao metadataDao = new MetadataDao(connection);
-            MasterKeyWindow masterKeyWindow = new MasterKeyWindow(null);
+            MasterKeyDialog masterKeyDialog = new MasterKeyDialog(null);
             MasterKeyService masterKeyService = new MasterKeyService(
                     new KeyringMasterKeyUtil(Keyring.create()),
-                    masterKeyWindow
+                    masterKeyDialog
             );
             String masterKey = masterKeyService.get();
 

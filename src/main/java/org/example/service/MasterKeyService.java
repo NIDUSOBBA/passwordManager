@@ -2,23 +2,21 @@ package org.example.service;
 
 import com.github.javakeyring.BackendNotSupportedException;
 import com.github.javakeyring.PasswordAccessException;
-import org.example.controller.MasterKeyWindow;
+import org.example.dialog.MasterKeyDialog;
 import org.example.utile.KeyringMasterKeyUtil;
-
-import javax.swing.*;
 
 public class MasterKeyService {
     private final KeyringMasterKeyUtil keyUtil;
-    private final MasterKeyWindow masterKeyWindow;
+    private final MasterKeyDialog masterKeyDialog;
 
-    public MasterKeyService(KeyringMasterKeyUtil keyUtil, MasterKeyWindow masterKeyWindow) {
+    public MasterKeyService(KeyringMasterKeyUtil keyUtil, MasterKeyDialog masterKeyDialog) {
         this.keyUtil = keyUtil;
-        this.masterKeyWindow = masterKeyWindow;
+        this.masterKeyDialog = masterKeyDialog;
     }
 
     public void masterKeyInit() throws InterruptedException {
-        masterKeyWindow.setVisible(true);
-        if (!masterKeyWindow.isSetupCompleted()){
+        masterKeyDialog.setVisible(true);
+        if (!masterKeyDialog.isSetupCompleted()){
             System.exit(0);
             return;
         }
@@ -41,6 +39,6 @@ public class MasterKeyService {
     }
 
     public String getGenKey(){
-        return masterKeyWindow.getMasterKey();
+        return masterKeyDialog.getMasterKey();
     }
 }

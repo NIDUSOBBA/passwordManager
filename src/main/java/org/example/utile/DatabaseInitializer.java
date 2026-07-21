@@ -16,7 +16,7 @@ public class DatabaseInitializer {
                 """;
         String createPasswordVaultTable = """
                 CREATE TABLE IF NOT EXISTS password (
-                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id INTEGER PRIMARY KEY,
                                 encrypted_password TEXT NOT NULL,
                                 password_fingerprint TEXT UNIQUE,
                                 created_at DATETIME 
@@ -24,14 +24,14 @@ public class DatabaseInitializer {
                 """;
         String createEmailTable = """
                 CREATE TABLE IF NOT EXISTS email (
-                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id INTEGER PRIMARY KEY,
                                 email TEXT NOT NULL UNIQUE,
                                 created_at DATETIME 
                             );
                 """;
         String createAccountTable = """
                 CREATE TABLE IF NOT EXISTS account (
-                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id INTEGER PRIMARY KEY,
                                 service_name TEXT NOT NULL UNIQUE,
                                 email_id INTEGER,
                                 username INTEGER,

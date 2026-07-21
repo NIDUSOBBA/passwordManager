@@ -17,7 +17,7 @@ public class AccountDao {
         this.connection = connection;
     }
 
-    public void crete(AccountCreateDto account) {
+    public void create(AccountCreateDto account) {
         String insertQuery = """
                 INSERT INTO account (service_name, email_id, username, password_id, created_at, updated_at)
                 VALUES (?, ?, ?, ?, ?,?);
@@ -30,7 +30,6 @@ public class AccountDao {
             preparedStatement.setInt(4, account.encryptedPassword());
             preparedStatement.setTimestamp(5, TimestampUtil.getCurrentTimestamp());
             preparedStatement.setTimestamp(6, TimestampUtil.getCurrentTimestamp());
-
             preparedStatement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException("Account duplicated");
