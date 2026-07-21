@@ -1,6 +1,7 @@
 package org.example.panel;
 
 import org.example.controller.MasterWindow;
+import org.example.dialog.DeletedDialog;
 import org.example.dto.PasswordDto;
 import org.example.service.PasswordService;
 import org.example.utile.AppLogger;
@@ -96,12 +97,10 @@ public class PasswordPanel extends TableBasePage implements TableBaseMethod {
     public void delete() {
         int viewRow = table.getSelectedRow();
         if (viewRow >= 0) {
-            int confirmDialog = JOptionPane.showConfirmDialog(masterWindow, "Delete password?");
-            if (confirmDialog == JOptionPane.YES_OPTION) {
+            DeletedDialog deletedDialog = new DeletedDialog(null);
+            if (deletedDialog.isSetupCompleted()) {
                 int modelRow = table.convertRowIndexToModel(viewRow);
-
                 int id = (int) passwordModel.getValueAt(modelRow, 0);
-
                 try {
                     passwordModel.removeRow(modelRow);
                     passwordService.deleteById(id);
@@ -111,6 +110,8 @@ public class PasswordPanel extends TableBasePage implements TableBaseMethod {
                 } catch (Exception e) {
                     AppLogger.error("Password delete exception: ", e);
                 }
+            }else {
+                AppLogger.info("Password is not deleted");
             }
         } else {
             AppLogger.warn("Password is not selected");

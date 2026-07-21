@@ -1,6 +1,7 @@
 package org.example.panel;
 
 import org.example.controller.MasterWindow;
+import org.example.dialog.DeletedDialog;
 import org.example.dto.*;
 import org.example.service.AccountService;
 import org.example.utile.AppLogger;
@@ -104,8 +105,8 @@ public class AccountPanel extends TableBasePage implements TableBaseMethod {
     public void delete() {
         int viewRow = table.getSelectedRow();
         if (viewRow >= 0) {
-            int confirmDialog = JOptionPane.showConfirmDialog(masterWindow, "Delete account?");
-            if (confirmDialog == JOptionPane.YES_OPTION) {
+            DeletedDialog deletedDialog = new DeletedDialog(null);
+            if (deletedDialog.isSetupCompleted()) {
                 int modelRow = table.convertRowIndexToModel(viewRow);
 
                 int id = (int) accountModel.getValueAt(modelRow, 0);

@@ -1,6 +1,7 @@
 package org.example.panel;
 
 import org.example.controller.MasterWindow;
+import org.example.dialog.DeletedDialog;
 import org.example.dto.EmailDto;
 import org.example.service.EmailService;
 import org.example.utile.AppLogger;
@@ -94,8 +95,8 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
     public void delete() {
         int viewRow = table.getSelectedRow();
         if (viewRow >= 0) {
-            int confirmDialog = JOptionPane.showConfirmDialog(masterWindow, "Delete email?");
-            if (confirmDialog == JOptionPane.YES_OPTION) {
+            DeletedDialog deletedDialog = new DeletedDialog(null);
+            if (deletedDialog.isSetupCompleted()) {
                 int modelRow = table.convertRowIndexToModel(viewRow);
 
                 int id = (int) emailModel.getValueAt(modelRow, 0);
@@ -108,6 +109,8 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
                 } catch (Exception e) {
                     AppLogger.error("Email delete exception: ", e);
                 }
+            }else {
+                AppLogger.info("Email is not deleted");
             }
         } else {
             AppLogger.warn("Email is not selected");
