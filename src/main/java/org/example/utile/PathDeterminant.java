@@ -4,6 +4,7 @@ import org.example.Main;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 
 public class PathDeterminant {
 
@@ -24,5 +25,9 @@ public class PathDeterminant {
             AppLogger.error("Path Determinant exception: ", e);
         }
         return "";
+    }
+
+    public static Path reminderPath() {
+        return Path.of(PathDeterminant.locationDisk() + "reminder.txt");
     }
 }
