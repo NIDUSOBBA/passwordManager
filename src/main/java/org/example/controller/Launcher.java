@@ -1,6 +1,9 @@
 package org.example.controller;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.github.javakeyring.BackendNotSupportedException;
+import com.github.javakeyring.Keyring;
+import org.example.connection.SQLiteConnection;
 import org.example.dao.AccountDao;
 import org.example.dao.EmailDao;
 import org.example.dao.MetadataDao;
@@ -10,9 +13,7 @@ import org.example.panel.EmailPanel;
 import org.example.panel.LogPanel;
 import org.example.panel.PasswordPanel;
 import org.example.service.*;
-import org.example.utile.AppLogger;
-import org.example.utile.NotifyDataChanged;
-import org.example.utile.ResponseComposerAccount;
+import org.example.utile.*;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -21,32 +22,63 @@ import java.sql.Connection;
 import java.util.concurrent.CountDownLatch;
 
 public class Launcher {
+    private static MasterKeyService masterKeyService;
+    private static AccountService accountService;
+    private static PasswordService passwordService;
+    private static EmailService emailService;
 
-    public static void start(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection) throws Exception {
+    public static void start() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        Launcher.managerIn(masterKeyService, metadataDao, connection, countDownLatch);
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            AppLogger.error("InterruptedException: ", e);
+        try (Connection connection = SQLiteConnection.getConnection()) {
+            DatabaseInitializer.initializeDatabase(connection);
+            masterKeyIn();
+            repositoryIn(connection);
+            windowIn(countDownLatch);
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                AppLogger.error("InterruptedException: ", e);
+            }
+        } catch (Exception e) {
+            AppLogger.error("Launcher initialize exception: ", e);
         }
+
+    }
+
+    //Создание мастер ключа, его чтение и создание диалога о мастер ключе
+    public static void masterKeyIn () throws BackendNotSupportedException, InterruptedException {
+        KeyringMasterKeyUtil keyringMasterKeyUtil = new KeyringMasterKeyUtil(Keyring.create());
+        MasterKeyDialogManager masterKeyDialogManager = new MasterKeyDialogManager(keyringMasterKeyUtil);
+        masterKeyService = new MasterKeyService(keyringMasterKeyUtil);
+        String masterKey = masterKeyService.get();
+        if (masterKey == null) {
+            masterKeyDialogManager.masterKeyInit();
+            masterKeyService.masterKeyCreate(masterKeyDialogManager.getCrDiKey());
+        }
+        reminderIn(masterKeyDialogManager);
+    }
+
+    //Если пользователь долго не заходит в приложение, переспрашивает мастер ключ
+    public static void reminderIn(MasterKeyDialogManager masterKeyDialogManager) throws BackendNotSupportedException, InterruptedException {
+        MasterKeyReminder masterKeyReminder = new MasterKeyReminder(masterKeyDialogManager);
+        masterKeyReminder.start();
     }
 
     //Создание всех основных классов приложения
-    public static void managerIn(MasterKeyService masterKeyService, MetadataDao metadataDao, Connection connection, CountDownLatch countDownLatch) throws Exception {
+    public static void repositoryIn(Connection connection) throws Exception {
+        MetadataDao metadataDao = new MetadataDao(connection);
         VaultEncryptionService vaultEncryptionService = new VaultEncryptionService(masterKeyService.get(), metadataDao);
         PasswordDao passwordDao = new PasswordDao(connection, vaultEncryptionService);
         EmailDao emailDao = new EmailDao(connection);
         AccountDao accountDao = new AccountDao(connection);
         ResponseComposerAccount responseComposerAccount = new ResponseComposerAccount(emailDao, passwordDao);
-        windowIn(new AccountService(accountDao, responseComposerAccount),
-                new PasswordService(passwordDao),
-                new EmailService(emailDao),
-                countDownLatch);
+        accountService  = new AccountService(accountDao, responseComposerAccount);
+        passwordService = new PasswordService(passwordDao);
+        emailService = new EmailService(emailDao);
     }
 
     //Запуск основного окна приложения
-    public static void windowIn(AccountService accountService, PasswordService passwordService, EmailService emailService,CountDownLatch countDownLatch) {
+    public static void windowIn(CountDownLatch countDownLatch) {
         LogPanel logPanel = new LogPanel();
         AccountPanel accountPanel = new AccountPanel(accountService);
         NotifyDataChanged.setAccountPanel(accountPanel);
@@ -77,7 +109,6 @@ public class Launcher {
             });
             app.setVisible(true);
         });
-
     }
 
 }
