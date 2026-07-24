@@ -87,7 +87,7 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
                 AppLogger.warn("Email can't be empty");
             }
         } else {
-            AppLogger.warn("Email is not added");
+            AppLogger.info("Email is not added");
         }
     }
 

@@ -40,7 +40,7 @@ public class LogPanel {
                 logPane.getStyledDocument().remove(0, logPane.getDocument().getLength());
                 AppLogger.info("Log clear");
             } catch (Exception ex) {
-                System.err.println("Create Logger button exception: " + ex.getMessage());
+                AppLogger.error("Create Logger button exception: ", ex);
             }
         });
         jPanel.add(btnClearLogs, BorderLayout.EAST);

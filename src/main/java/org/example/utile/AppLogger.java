@@ -58,7 +58,6 @@ public class AppLogger {
     }
 
     private static void log(String level, String msg) {
-        if (instance == null) return;
         String timestamp = LocalDateTime.now().format(instance.fmt);
         String line = String.format("[%s] [%s] %s%n", timestamp, level, msg);
 
@@ -67,7 +66,7 @@ public class AppLogger {
         } else {
             System.out.print(line);
         }
-        if (initialized) {
+        if (instance != null) {
             Style actualStyle = switch (level) {
                 case "WARN" -> warnStyle;
                 case "ERROR" -> errorStyle;
@@ -85,6 +84,8 @@ public class AppLogger {
                     System.err.println("Exception log: " + e.getMessage());
                 }
             });
+        }else{
+            return;
         }
     }
 }

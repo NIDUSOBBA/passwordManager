@@ -89,7 +89,7 @@ public class PasswordPanel extends TableBasePage implements TableBaseMethod {
                 AppLogger.warn("Password can't be empty");
             }
         } else {
-            AppLogger.warn("Password is not added");
+            AppLogger.info("Password is not added");
         }
     }
 

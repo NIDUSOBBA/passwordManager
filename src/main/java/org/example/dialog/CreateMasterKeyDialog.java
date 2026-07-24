@@ -8,7 +8,7 @@ import java.awt.*;
 import java.security.SecureRandom;
 
 //Диалог для создания нового мастер ключа
-public class MasterKeyDialog extends JDialog {
+public class CreateMasterKeyDialog extends JDialog {
 
     private JTextField masterKeyField;
     private boolean setupCompleted = false;
@@ -17,7 +17,7 @@ public class MasterKeyDialog extends JDialog {
     private static final String PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
 
 
-    public MasterKeyDialog(Frame parent) {
+    public CreateMasterKeyDialog(Frame parent) {
         super(parent, "Enter the master key", ModalityType.APPLICATION_MODAL);
         setSize(800, 310);
         setLocationRelativeTo(parent);
