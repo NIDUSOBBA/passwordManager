@@ -2,10 +2,12 @@ package org.example.dao;
 
 import org.example.dto.PasswordDto;
 import org.example.service.VaultEncryptionService;
+import org.example.utile.AppLogger;
 import org.example.utile.TimestampUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PasswordDao {
@@ -31,6 +33,7 @@ public class PasswordDao {
             throw new RuntimeException("Password duplicated");
         }
     }
+
 
     public PasswordDto getById(int id) {
         String selectQuery = """
@@ -60,6 +63,7 @@ public class PasswordDao {
         List<PasswordDto> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(selectQuery);
+
             while (resultSet.next()) {
                 resultList.add(new PasswordDto(
                         resultSet.getInt("id"),

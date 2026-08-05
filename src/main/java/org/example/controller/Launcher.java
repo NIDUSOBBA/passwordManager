@@ -26,6 +26,8 @@ public class Launcher {
     private static AccountService accountService;
     private static PasswordService passwordService;
     private static EmailService emailService;
+    private static ExportData exportData;
+    private static ImportData importData;
 
     public static void start() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -75,6 +77,8 @@ public class Launcher {
         accountService  = new AccountService(accountDao, responseComposerAccount);
         passwordService = new PasswordService(passwordDao);
         emailService = new EmailService(emailDao);
+        exportData = new ExportData(connection);
+        importData = new ImportData(connection);
     }
 
     //Запуск основного окна приложения
@@ -83,7 +87,9 @@ public class Launcher {
         AccountPanel accountPanel = new AccountPanel(accountService);
         NotifyDataChanged.setAccountPanel(accountPanel);
         PasswordPanel passwordPanel = new PasswordPanel(passwordService);
+        NotifyDataChanged.setPasswordPanel(passwordPanel);
         EmailPanel emailPanel = new EmailPanel(emailService);
+        NotifyDataChanged.setEmailPanel(emailPanel);
         SwingUtilities.invokeLater(() -> {
             try {
                 FlatDarkLaf.setup();
@@ -96,7 +102,7 @@ public class Launcher {
             } catch (Exception e) {
                 AppLogger.error("Exception windows initialization: ", e);
             }
-            MasterWindow app = new MasterWindow(logPanel, accountPanel, passwordPanel, emailPanel);
+            MasterWindow app = new MasterWindow(exportData,importData,logPanel,accountPanel,passwordPanel,emailPanel);
             passwordPanel.setWindowManager(app);
             emailPanel.setWindowManager(app);
             accountPanel.setWindowManager(app);

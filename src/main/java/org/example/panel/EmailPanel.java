@@ -121,5 +121,12 @@ public class EmailPanel extends TableBasePage implements TableBaseMethod {
         return emailComboBox;
     }
 
+    public void deleteAllRow(){
+        int rowCount = emailModel.getRowCount();
+        while (rowCount != 0){
+            rowCount--;
+            emailModel.removeRow(rowCount);
+        }
+    }
 
 }

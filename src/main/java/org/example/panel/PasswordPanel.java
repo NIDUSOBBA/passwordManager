@@ -122,4 +122,12 @@ public class PasswordPanel extends TableBasePage implements TableBaseMethod {
         return passwordComboBox;
     }
 
+    public void deleteAllRow(){
+        int rowCount = passwordModel.getRowCount();
+        while (rowCount != 0){
+            rowCount--;
+            passwordModel.removeRow(rowCount);
+        }
+    }
+
 }

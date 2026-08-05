@@ -14,7 +14,7 @@ public class AppLogger {
 
     private static JTextPane logPane;
     private static StyledDocument doc;
-    private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private static Style infoStyle;
     private static Style warnStyle;
@@ -41,7 +41,6 @@ public class AppLogger {
         if (instance == null) {
             instance = new AppLogger(logPane);
         }
-        initialized = true;
     }
 
     public static void info(String msg) {
@@ -58,7 +57,7 @@ public class AppLogger {
     }
 
     private static void log(String level, String msg) {
-        String timestamp = LocalDateTime.now().format(instance.fmt);
+        String timestamp = LocalDateTime.now().format(fmt);
         String line = String.format("[%s] [%s] %s%n", timestamp, level, msg);
 
         if ("ERROR".equals(level)) {
